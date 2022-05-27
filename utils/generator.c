@@ -4,9 +4,12 @@
 
 #include "../src/interF1.h"
 
+void lerBin();
+void tiraEspaco(Alunos *aluno);
+
 int main() {
-    FILE *arq = fopen("copiamenor.txt", "r");
-    FILE *binAl = fopen("ProvaoAleatorio.dat", "wb");
+    FILE *arq = fopen("../data/PROVAO.TXT", "r");
+    FILE *binAl = fopen("../data/ProvaoAleatorio.dat", "wb");
     // FILE *binAs = fopen("ProvaoAscendente.dat", "wb");
     // FILE *binDe = fopen("ProvaoDescendente.dat", "wb");
 
@@ -56,16 +59,19 @@ int main() {
     // fclose(binAs);
     // fclose(binDe);
 
+    // lerBin();
+
     return 0;
 }
 
 void lerBin() {
     FILE *bin = fopen("ProvaoAleatorio.dat", "rb");
     Alunos teste;
-
-    for (int i = 0; i < 1; i++) {
+    int cont =0;
+    while(!feof(bin)) {
         fread(&teste, sizeof(Alunos), 1, bin);
 
+        printf("%d -",cont++);
         printf("%ld ", teste.inscricao);
         printf("%.2f ", teste.nota);
         printf("%s ", teste.estado);
@@ -73,19 +79,21 @@ void lerBin() {
         printf("%s \n", teste.curso);
     }
 
-    printf("%s %d \n", teste.curso, strlen(teste.curso));
+    // printf("%s %d \n", teste.curso, (int)strlen(teste.curso));
 }
 
 void tiraEspaco(Alunos *itemAluno) {
+    itemAluno->estado[2] = '\0';
+    
     for(int i = 0; i < 50; i++) {
         if(itemAluno->cidade[i] == ' ' && itemAluno->cidade[i + 1] == ' ') {
-            (*itemAuluno)->cidade[i] = '\0';
+            itemAluno->cidade[i] = '\0';
             break;
         }
     }
     for(int i = 0; i < 30; i++) {
-        if(itemAluno.curso[i] == ' ' && *itemAluno.curso[i + 1] == ' ') {
-            *itemAuluno->curso[i] = '\0';
+        if(itemAluno->curso[i] == ' ' && itemAluno->curso[i + 1] == ' ') {
+            itemAluno->curso[i] = '\0';
             break;
         }
     }

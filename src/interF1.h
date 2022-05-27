@@ -11,7 +11,7 @@ typedef struct {
     float nota;
     char estado[3];
     char cidade[50];
-    char curso[32];
+    char curso[30];
 } Alunos;
 
 typedef struct {
