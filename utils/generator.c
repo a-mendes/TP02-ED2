@@ -8,8 +8,12 @@ void lerBin();
 void tiraEspaco(Alunos *aluno);
 
 int main() {
-    FILE *arq = fopen("../data/PROVAO.TXT", "r");
-    FILE *binAl = fopen("../data/ProvaoAleatorio.dat", "wb");
+    // FILE *arq = fopen("../data/PROVAO.TXT", "r");
+
+    FILE *arq = fopen("copiamenor.txt", "r");
+    FILE *binAl = fopen("../data/AleatorioMenor.dat", "wb");
+
+    // FILE *binAl = fopen("../data/ProvaoAleatorio.dat", "wb");
     // FILE *binAs = fopen("ProvaoAscendente.dat", "wb");
     // FILE *binDe = fopen("ProvaoDescendente.dat", "wb");
 
@@ -88,13 +92,13 @@ void tiraEspaco(Alunos *itemAluno) {
     for(int i = 0; i < 50; i++) {
         if(itemAluno->cidade[i] == ' ' && itemAluno->cidade[i + 1] == ' ') {
             itemAluno->cidade[i] = '\0';
-            break;
+            // break;
         }
     }
     for(int i = 0; i < 30; i++) {
         if(itemAluno->curso[i] == ' ' && itemAluno->curso[i + 1] == ' ') {
             itemAluno->curso[i] = '\0';
-            break;
+            // break;
         }
     }
 }
