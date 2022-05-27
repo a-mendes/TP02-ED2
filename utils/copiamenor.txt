@@ -1,22 +1,46 @@
-00170838 034.8 MT CUIABA                                             ADMINISTRACAO                 
-00184065 022.5 SC ITAJAI                                             DIREITO                       
-00394595 041.3 SP SAO PAULO                                          MEDICINA VETERINARIA          
-00336015 046.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00034535 046.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00113812 067.3 MT CUIABA                                             ADMINISTRACAO                 
-00085344 031.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00373477 044.3 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00037379 017.8 MT PRIMAVERA DO LESTE                                 Jorel                         
-00382513 055.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00280714 055.3 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00412790 000.0 MT CUIABA                                             ADMINISTRACAO                 
-00041603 047.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00412715 044.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00061117 043.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00295222 049.3 MT CUIABA                                             ADMINISTRACAO                 
-00340424 041.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00306088 024.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00456679 022.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00009997 043.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00151750 041.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00370724 040.0 MT CUIABA                                             ADMINISTRACAO                 
+00409928 039.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00065996 038.3 MT AGUA BOA                                           ADMINISTRACAO                 
+00362081 037.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00423855 036.0 MT CUIABA                                             ADMINISTRACAO                 
+00066198 035.0 MT CUIABA                                             ADMINISTRACAO                 
+00035798 034.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00121505 033.8 MT CUIABA                                             ADMINISTRACAO                 
+00224450 032.5 MT CUIABA                                             ADMINISTRACAO                 
+00010357 031.8 MT CUIABA                                             ADMINISTRACAO                 
+00406263 030.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00207334 029.0 MT CUIABA                                             ADMINISTRACAO                 
+00301802 028.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00088312 027.3 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00210550 026.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00369241 025.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00142590 024.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00351991 023.8 MT CUIABA                                             ADMINISTRACAO                 
+00278763 022.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00409557 021.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00460650 020.0 DF BRASILIA                                           ADMINISTRACAO                 
+00394595 019.3 SP SAO PAULO                                          MEDICINA VETERINARIA          
+00170838 018.8 MT CUIABA                                             ADMINISTRACAO                 
+00184065 017.5 SC ITAJAI                                             DIREITO                       
+00394595 016.3 SP SAO PAULO                                          MEDICINA VETERINARIA          
+00336015 015.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00034535 014.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00113812 013.3 MT CUIABA                                             ADMINISTRACAO                 
+00085344 012.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00373477 011.3 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00037379 010.8 MT PRIMAVERA DO LESTE                                 Jorel                         
+00382513 009.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00280714 008.3 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00412790 007.0 MT CUIABA                                             ADMINISTRACAO                 
+00041603 006.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00412715 005.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00061117 004.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00295222 003.3 MT CUIABA                                             ADMINISTRACAO                 
+00340424 002.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00306088 001.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
+00456679 000.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
 00101991 033.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
 00313201 048.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
 00300056 022.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
@@ -33,28 +57,4 @@
 00162633 036.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
 00005317 025.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
 00059573 000.0 MT CUIABA                                             ADMINISTRACAO                 
-00163079 023.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00009997 043.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00151750 000.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00370724 000.0 MT CUIABA                                             ADMINISTRACAO                 
-00409928 037.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00065996 016.3 MT AGUA BOA                                           ADMINISTRACAO                 
-00362081 027.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00423855 000.0 MT CUIABA                                             ADMINISTRACAO                 
-00066198 056.0 MT CUIABA                                             ADMINISTRACAO                 
-00035798 045.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00121505 018.8 MT CUIABA                                             ADMINISTRACAO                 
-00224450 040.5 MT CUIABA                                             ADMINISTRACAO                 
-00010357 048.8 MT CUIABA                                             ADMINISTRACAO                 
-00406263 047.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00207334 000.0 MT CUIABA                                             ADMINISTRACAO                 
-00301802 020.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00088312 031.3 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00210550 024.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00369241 046.5 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00142590 031.0 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00351991 057.8 MT CUIABA                                             ADMINISTRACAO                 
-00278763 039.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00409557 058.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                 
-00460650 063.0 DF BRASILIA                                           ADMINISTRACAO                 
-00394595 041.3 SP SAO PAULO                                          MEDICINA VETERINARIA           
+00163079 023.8 MT PRIMAVERA DO LESTE                                 ADMINISTRACAO                  

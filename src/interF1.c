@@ -9,10 +9,16 @@ void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
     Estrutura aux = v[i];
 
     while (j <= dir) {
-        if (j < dir && (v[j].aluno.nota > v[j + 1].aluno.nota || v[j].maior == true) && v[j + 1].maior != true) {
+        if (j < dir && ((v[j].aluno.nota > v[j + 1].aluno.nota || v[j].maior == true) && v[j + 1].maior != true)) {
             j = j + 1;  // j recebe o outro filho de i
         }
+        if (j < dir && v[j].aluno.nota > v[j + 1].aluno.nota && v[j].maior == true && v[j + 1].maior == true) {
+            j = j + 1; 
+        }
         if (aux.aluno.nota <= v[j].aluno.nota && aux.maior != true) {
+            break;
+        }
+        if (aux.aluno.nota >= v[j].aluno.nota &&  v[j].maior == true && aux.maior != true) {
             break;
         }
 
@@ -49,14 +55,31 @@ void Insere_No(Estrutura *v, Alunos elem, int *tam) {
     }
 }
 
-void remove_No(Estrutura *v, int *tam) {
+bool remove_No(Estrutura *v, int *tam) {
     if (*tam == 0) {
-        return;
+        return false;
     } else {
-        v[0].aluno = v[*tam - 1].aluno;
+        v[0] = v[*tam - 1];
         *tam -= 1;
-        HEAP_CONSTROI(v, *tam);
     }
+
+    bool normal = true;
+    for (int i = 0; i < *tam; i++) {
+        if (v[i].maior == false) {
+            normal = false;
+            break;
+        }
+    }
+
+    if(normal) {
+        for (int i = 0; i < *tam; i++) {
+            v[i].maior = false; 
+        }
+    }
+
+    HEAP_CONSTROI(v, *tam);
+
+    return normal;
 }
 
 bool substitui(Estrutura *v, int *tam, Alunos elem) {
@@ -64,7 +87,7 @@ bool substitui(Estrutura *v, int *tam, Alunos elem) {
         return false;
     } else {
         if (v[0].aluno.nota > elem.nota) {
-            v[0].aluno = elem;
+            v[0].aluno = elem;                                                        
             v[0].maior = true;
         } else {
             v[0].aluno = elem;
@@ -80,7 +103,7 @@ bool substitui(Estrutura *v, int *tam, Alunos elem) {
         }
     }
 
-    if (normal) {
+    if(normal) {
         for (int i = 0; i < *tam; i++) {
             v[i].maior = false; 
         }
@@ -121,34 +144,31 @@ void imprime(Estrutura *v, int tam) {
     printf("\n");
 }
 
-
-
 // intercalacaoF1
 int main() {
-    // FILE* prova = fopen("../data/ProvaoAleatorio.dat", "rb");  // Arquivo de entrada
+    FILE* prova = fopen("../data/ProvaoAleatorio.dat", "rb");  // Arquivo de entrada
 
-    FILE* prova = fopen("../data/AleatorioMenor.dat", "rb");  // teste
+    // FILE* prova = fopen("../data/AleatorioMenor.dat", "rb");  // teste
 
     char nomes[TOTALFITA][TOTALFITA] = {""};                                  // Vetor de nomes para criar as fitas
     FILE* arqvs[TOTALFITA];                                            // Apontador para as fitas
-    Estrutura alunosEmMemoria[100]; // voltat intam
+    Estrutura alunosEmMemoria[TAMFITAINT]; // voltat intam
     int vetTam = 0;                              // Estrutura que guarda os alunos em memória
 
     nomeiaArquivo(nomes);
     criaArquivo(arqvs, nomes);
 
-    for (int i = 0; !feof(prova); i++) {
+    for (int i = 0; i < TAMFITAINT; i++) {
         alunosEmMemoria[i].aluno = readFile(prova);
         alunosEmMemoria[i].maior = false;
         vetTam++;
     }
-    imprime(alunosEmMemoria, vetTam);
 
     HEAP_CONSTROI(alunosEmMemoria, vetTam);
+    
+    vetTam = geraBlocos(arqvs, alunosEmMemoria, prova, &vetTam);
 
-    imprime(alunosEmMemoria, vetTam);
-
-    geraBlocos(arqvs, alunosEmMemoria, prova, &vetTam);
+    intercalacao(arqvs, alunosEmMemoria, &vetTam);
 
     fechaArq(arqvs);
     fclose(prova);
@@ -183,23 +203,27 @@ Alunos readFile(FILE* prova) {
 }
 
 
-void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], FILE *prova, int *vetTam) {
+int geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], FILE *prova, int *vetTam) {
     int numfita = 0;
     Alunos alunoNulo;
     alunoNulo.nota = -1;
     int c = 0;
-  
+    
     while(*vetTam > 0) {
-        // printf("%d ", c++);
+        printf("%d ", c++);
 
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[numfita]);
         
         if(feof(prova)) {
-            remove_No(alunosEmMemoria, vetTam);
-            printf("%d ", c++);
+            if(remove_No(alunosEmMemoria, vetTam)){
+                fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[numfita]);
+                printf("\n\n\n\n\nNULO\n\n\n\n");
+                numfita += 1;   
+            }
         } 
         else if(substitui(alunosEmMemoria, vetTam, readFile(prova))) {
             fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[numfita]);
+            printf("\n\n\n\n\nNULO\n\n\n\n");
             numfita += 1;
         }
 
@@ -208,24 +232,27 @@ void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], F
  
     }
 
-    printf("\noiei2\n");
+    // Alunos teste;
+    // int cont = 0;
+    // for(int i = 0; i < 19; i++){
+    //     rewind(arqvs[i]);
+    //     printf("FITA %d \n", i + 1);
+    //     while(!feof(arqvs[i])) {
+    //         fread(&teste, sizeof(Alunos), 1, arqvs[i]);
 
-    rewind(arqvs[0]);
-    
-    Alunos teste;
-    int cont = 0;
-    while(!feof(arqvs[0])) {
-        fread(&teste, sizeof(Alunos), 1, arqvs[0]);
+    //         printf("%d -",cont++);
+    //         printf("%ld ", teste.inscricao);
+    //         printf("%.2f ", teste.nota);
+    //         printf("%s ", teste.estado);
+    //         printf("%s ", teste.cidade);
+    //         printf("%s \n", teste.curso);
+    //     } 
+    //     printf("\n\n\n\n\n\n\n\n\n\n");
+    // } 
 
-        printf("%d -",cont++);
-        printf("%ld ", teste.inscricao);
-        printf("%.2f ", teste.nota);
-        printf("%s ", teste.estado);
-        printf("%s ", teste.cidade);
-        printf("%s \n", teste.curso);
-    }   
-
+    return numfita + 1;
 }
+
 
 
 void fechaArq(FILE* arqvs[TOTALFITA]) {
@@ -235,4 +262,42 @@ void fechaArq(FILE* arqvs[TOTALFITA]) {
 }
 
 
+void intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], int *vetTam) {
 
+    for(int i = 0; i < *vetTam; i++) {
+        fread(&alunosEmMemoria[i].aluno, sizeof(Alunos), 1, arqvs[i]);
+        alunosEmMemoria[i].posFita = i;
+    }
+
+    HEAP_CONSTROI(alunosEmMemoria, *vetTam);
+    Alunos alunoNulo;
+    alunoNulo.nota = -1;
+
+    Alunos aluno;
+
+
+    while (true) {  
+
+        fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
+
+        aluno = readFile(arqvs[alunosEmMemoria[0].posFita]);
+
+        if(aluno.nota == -1) {
+            if(remove_No(alunosEmMemoria, vetTam)) {
+               fwite(&aluno, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
+            }
+        }
+        else if(substitui(alunosEmMemoria, vetTam, aluno)) {
+            fwite(&aluno, sizeof(Alunos), 1, arqvs[POSFITAEXT]) // NULO
+        }
+        
+
+
+
+
+
+
+
+
+    }
+}
