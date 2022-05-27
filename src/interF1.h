@@ -9,9 +9,9 @@
 typedef struct {
     long inscricao;
     float nota;
-    char estado[2];
+    char estado[3];
     char cidade[50];
-    char curso[30];
+    char curso[32];
 } Alunos;
 
 typedef struct {
