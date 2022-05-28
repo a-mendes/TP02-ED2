@@ -1,7 +1,4 @@
 #include "interF1.h"
-// Obter os arquivos originais ordanados ascendentes, descendentes e aleatoiamente, e apartir deles fazer a ordenação
-
-
 
 void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
     int i = esq;
@@ -108,7 +105,7 @@ bool substitui(Estrutura *v, int *tam, Alunos elem) {
             v[i].maior = false; 
         }
     }
-
+   
     HEAP_CONSTROI(v, *tam);
 
     return normal;
@@ -138,8 +135,9 @@ bool substitui(Estrutura *v, int *tam, Alunos elem) {
 
 void imprime(Estrutura *v, int tam) {
     int cont = 0;
+    printf("\n");
     for (int i = 0; i < tam; i++) {
-        printf("%d - %.1f %d \n", cont++, v[i].aluno.nota, v[i].maior);
+        printf("%d - %ld %.1f %s %s %s T/F: %d \n", cont++, v[i].aluno.inscricao, v[i].aluno.nota, v[i].aluno.estado, v[i].aluno.cidade, v[i].aluno.curso, v[i].maior);
     }
     printf("\n");
 }
@@ -178,6 +176,7 @@ int main() {
     return 0;
 }
 
+
 void nomeiaArquivo(char nomes[TOTALFITA][TOTALFITA]) {
     char buffer[3];
     char aux[TOTALFITA] = {"../data/fita"};
@@ -209,15 +208,12 @@ void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], F
     int numfita = 0;
     Alunos alunoNulo;
     alunoNulo.nota = -1;
-    int c = 0;
     
-    while(*vetTam > 0) {
-        printf("%d ", c++);
-
+    while(*vetTam > 1) {
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[numfita]);
         
         if(feof(prova)) {
-            if(remove_No(alunosEmMemoria, vetTam)){
+            if(remove_No(alunosEmMemoria, vetTam) || *vetTam == 1){
                 fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[numfita]);
                 numfita += 1;   
             }
@@ -234,23 +230,24 @@ void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], F
 
     *vetTam = numfita + 1;
 
-    // Alunos teste;
-    // int cont = 0;
-    // for(int i = 0; i < 19; i++){
-    //     rewind(arqvs[i]);
-    //     printf("FITA %d \n", i + 1);
-    //     while(!feof(arqvs[i])) {
-    //         fread(&teste, sizeof(Alunos), 1, arqvs[i]);
 
-    //         printf("%d -",cont++);
-    //         printf("%ld ", teste.inscricao);
-    //         printf("%.2f ", teste.nota);
-    //         printf("%s ", teste.estado);
-    //         printf("%s ", teste.cidade);
-    //         printf("%s \n", teste.curso);
-    //     } 
-    //     printf("\n\n\n\n\n\n\n\n\n\n");
-    // } 
+    Alunos teste;
+    int cont = 0;
+    for(int i = 0; i < 19; i++){
+        rewind(arqvs[i]);
+        printf("FITA %d \n", i + 1);
+        while(!feof(arqvs[i])) {
+            fread(&teste, sizeof(Alunos), 1, arqvs[i]);
+
+            printf("%d -",cont++);
+            printf("%ld ", teste.inscricao);
+            printf("%.2f ", teste.nota);
+            printf("%s ", teste.estado);
+            printf("%s ", teste.cidade);
+            printf("%s \n", teste.curso);
+        } 
+        printf("\n\n\n\n\n\n\n\n\n\n");
+    } 
 }
 
 
@@ -260,25 +257,22 @@ void fechaArq(FILE* arqvs[TOTALFITA]) {
     }
 }
 
-// DESCOBRIR OQ ESTA ERRADO
+
 void intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], int *vetTam) {
     Alunos alunoNulo;
     alunoNulo.nota = -1;
 
     Alunos aluno;
-
+ 
     preencheVetorAlunos(arqvs, alunosEmMemoria, vetTam);
 
-    imprime(alunosEmMemoria, *vetTam);
-    exit(1);
-
-    while(*vetTam > 0) {  
+    while(*vetTam > 0) {
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
-
-        imprimeFitaSaida(arqvs);
-        exit(1);
-
+        
         aluno = readFile(arqvs[alunosEmMemoria[0].posFita]);
+
+        if(feof(arqvs[alunosEmMemoria[0].posFita]))
+            aluno.nota = -1;
 
         if(aluno.nota == -1) {
             if(remove_No(alunosEmMemoria, vetTam)) {
@@ -299,8 +293,10 @@ void intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT],
 void preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], int *vetTam) {
     if(*vetTam != 0) {
         for(int i = 0; i < *vetTam; i++) {
+            rewind(arqvs[i]);
             fread(&alunosEmMemoria[i].aluno, sizeof(Alunos), 1, arqvs[i]);
             alunosEmMemoria[i].posFita = i;
+            alunosEmMemoria[i].maior = false;
         }
     }
     else {
@@ -308,6 +304,7 @@ void preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFI
             if(!feof(arqvs[i])){
                 fread(&alunosEmMemoria[j].aluno, sizeof(Alunos), 1, arqvs[i]);
                 alunosEmMemoria[j++].posFita = i;
+                alunosEmMemoria[i].maior = false;
                 *vetTam += 1;
             }
         }
