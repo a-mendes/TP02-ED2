@@ -254,7 +254,6 @@ void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], F
 }
 
 
-
 void fechaArq(FILE* arqvs[TOTALFITA]) {
     for (int i = 0; i < TOTALFITA; i++) {
         fclose(arqvs[i]);
@@ -270,8 +269,14 @@ void intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT],
 
     preencheVetorAlunos(arqvs, alunosEmMemoria, vetTam);
 
+    imprime(alunosEmMemoria, *vetTam);
+    exit(1);
+
     while(*vetTam > 0) {  
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
+
+        imprimeFitaSaida(arqvs);
+        exit(1);
 
         aluno = readFile(arqvs[alunosEmMemoria[0].posFita]);
 
