@@ -1,5 +1,5 @@
 @echo off
-del *.exe >nul 2>&1 && cd obj && del *.o >nul 2>&1 && cd ..
+del *.exe >nul 2>&1 && cd obj && del *.o >nul 2>&1 && cd ../data && del fita*.dat && cd ..
 gcc -c ./utils/heap.c -o ./obj/heap.o
 gcc -c ./utils/arquivo.c -o ./obj/arquivo.o
 gcc -c ./src/interF1.c -o ./obj/interF1.o
