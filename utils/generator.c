@@ -16,7 +16,7 @@ int main() {
     // FILE *binAl = fopen("../data/ProvaoAleatorio.dat", "wb");
     // FILE *binAs = fopen("ProvaoAscendente.dat", "wb");
     // FILE *binDe = fopen("ProvaoDescendente.dat", "wb");
-
+ 
     char aux1[102];
     char aux2[10];
     int i, j, tam;
@@ -63,13 +63,13 @@ int main() {
     // fclose(binAs);
     // fclose(binDe);
 
-    // lerBin();
+    lerBin();
 
     return 0;
 }
 
 void lerBin() {
-    FILE *bin = fopen("ProvaoAleatorio.dat", "rb");
+    FILE *bin = fopen("../data/AleatorioMenor.dat", "rb");
     Alunos teste;
     int cont =0;
     while(fread(&teste, sizeof(Alunos), 1, bin)) {
@@ -82,6 +82,7 @@ void lerBin() {
         printf("%s \n", teste.curso);
     }
     // printf("%s %d \n", teste.curso, (int)strlen(teste.curso));
+    printf("\n\n");
 }
 
 void tiraEspaco(Alunos *itemAluno) {
