@@ -72,8 +72,7 @@ void lerBin() {
     FILE *bin = fopen("ProvaoAleatorio.dat", "rb");
     Alunos teste;
     int cont =0;
-    while(!feof(bin)) {
-        fread(&teste, sizeof(Alunos), 1, bin);
+    while(fread(&teste, sizeof(Alunos), 1, bin)) {
 
         printf("%d -",cont++);
         printf("%ld ", teste.inscricao);
@@ -82,7 +81,6 @@ void lerBin() {
         printf("%s ", teste.cidade);
         printf("%s \n", teste.curso);
     }
-
     // printf("%s %d \n", teste.curso, (int)strlen(teste.curso));
 }
 
@@ -92,13 +90,11 @@ void tiraEspaco(Alunos *itemAluno) {
     for(int i = 0; i < 50; i++) {
         if(itemAluno->cidade[i] == ' ' && itemAluno->cidade[i + 1] == ' ') {
             itemAluno->cidade[i] = '\0';
-            // break;
         }
     }
     for(int i = 0; i < 30; i++) {
         if(itemAluno->curso[i] == ' ' && itemAluno->curso[i + 1] == ' ') {
             itemAluno->curso[i] = '\0';
-            // break;
         }
     }
 }
