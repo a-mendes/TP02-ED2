@@ -131,7 +131,7 @@ void imprime(Estrutura *v, int tam) {
 int main() {
     // FILE* prova = fopen("../data/ProvaoAleatorio.dat", "rb");  // Arquivo de entrada
 
-    FILE *prova = fopen("../data/AleatorioMenor.dat", "rb");  // teste
+    FILE *prova = fopen("./data/AleatorioMenor.dat", "rb");  // teste
 
     char nomes[TOTALFITA][TOTALFITA] = {""};  // Vetor de nomes para criar as fitas
     FILE *arqvs[TOTALFITA];                   // Apontador para as fitas
@@ -164,13 +164,13 @@ int main() {
 
 void nomeiaArquivo(char nomes[TOTALFITA][TOTALFITA]) {
     char buffer[3];
-    char aux[TOTALFITA] = {"../data/fita"};
+    char aux[TOTALFITA] = {"./data/fita"};
 
     for (int i = 1; i <= TOTALFITA; i++) {
         itoa(i, buffer, 10);
         strcat(aux, buffer);
         strcpy(nomes[i - 1], strcat(aux, ".dat"));
-        aux[12] = '\0';
+        aux[11] = '\0';
     }
 }
 
