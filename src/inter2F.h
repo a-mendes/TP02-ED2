@@ -12,11 +12,7 @@
 #define FF_TAMFITAINT 9
 #define FF_POSFITAEXT 9
 
-void FF_nomeiaArquivo(char nomes[20][20]);
-void FF_criaArquivo(FILE *arqvs[20], char nomes[20][20]);
 void FF_geraBlocos(FILE *arqvs[FF_TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], FILE *prova, int *vetTam);
-void FF_fechaArq(FILE *arqvs[FF_TOTALFITA]);
-Alunos FF_readFile(FILE *prova);
 void FF_intercalacao(FILE *arqvs[FF_TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int *vetTam);
 void FF_preencheVetorAlunos(FILE *arqvs[FF_TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int *vetTam);
 void FF_imprimeFitaSaida(FILE *arqvs[FF_TOTALFITA]);
