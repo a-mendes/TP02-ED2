@@ -170,12 +170,10 @@ void redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA]) {
         if (aux.nota == -1) {  // se for -1, passa pra proxima fita
             fread(&aux, sizeof(Alunos), 1, arqvs[19]);
             contador++;
-            ////////////////////////////////////////////////////////////////
-            fwrite(&aux, sizeof(Alunos), 1, arqvs[contador]);  // vai dar problema se o contador for 19 !!!!!!!!!
-            ////////////////////////////////////////////////////////////////
-        }
-        if (contador == 19) {  // se for 19 volta pra primeira fita
-            contador = 0;
+            if (contador == 19) {
+                contador = 0;
+                fwrite(&aux, sizeof(Alunos), 1, arqvs[contador]);
+            }
         }
     }
 
