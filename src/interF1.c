@@ -1,122 +1,6 @@
 #include "interF1.h"
 
-void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
-    int i = esq;
-    int j = i * 2 + 1;
-    Estrutura aux = v[i];
-
-    while (j <= dir) {
-        if (j < dir && ((v[j].aluno.nota > v[j + 1].aluno.nota || v[j].maior == true) && v[j + 1].maior != true)) {
-            j = j + 1;  // j recebe o outro filho de i
-        }
-        if (j < dir && v[j].aluno.nota > v[j + 1].aluno.nota && v[j].maior == true && v[j + 1].maior == true) {
-            j = j + 1;
-        }
-        if (aux.aluno.nota <= v[j].aluno.nota && aux.maior != true) {
-            break;
-        }
-        if (aux.aluno.nota >= v[j].aluno.nota && v[j].maior == true && aux.maior != true) {
-            break;
-        }
-
-        v[i] = v[j];
-
-        i = j;
-        j = i * 2 + 1;
-    }
-    v[i] = aux;
-}
-
-void HEAP_CONSTROI(Estrutura *v, int tam) {
-    int esq = (tam / 2) - 1;
-    while (esq >= 0) {
-        HEAP_REFAZ(v, esq, tam - 1);
-        esq--;
-    }
-}
-
-void Insere_No(Estrutura *v, Alunos elem, int *tam) {
-    if (*tam > 19) {
-        printf("\nUltrapassou tamanho limite\n");
-        return;
-    }
-    if (*tam == 0) {
-        v[*tam].aluno = elem;
-        v[*tam].maior = false;
-        *tam += 1;
-    } else {
-        v[*tam].aluno = elem;
-        v[*tam].maior = false;
-        *tam += 1;
-        HEAP_CONSTROI(v, *tam);
-    }
-}
-
-bool remove_No(Estrutura *v, int *tam) {
-    if (*tam == 0) {
-        return false;
-    } else {
-        v[0] = v[*tam - 1];
-        *tam -= 1;
-    }
-
-    bool normal = true;
-    for (int i = 0; i < *tam; i++) {
-        if (v[i].maior == false) {
-            normal = false;
-            break;
-        }
-    }
-
-    if (normal) {
-        for (int i = 0; i < *tam; i++) {
-            v[i].maior = false;
-        }
-    }
-
-    HEAP_CONSTROI(v, *tam);
-
-    return normal;
-}
-
-bool substitui(Estrutura *v, int *tam, Alunos elem) {
-    if (*tam == 0) {
-        return false;
-    } else {
-        if (v[0].aluno.nota > elem.nota) {
-            v[0].aluno = elem;
-            v[0].maior = true;
-        } else {
-            v[0].aluno = elem;
-            v[0].maior = false;
-        }
-    }
-
-    bool normal = true;
-    for (int i = 0; i < *tam; i++) {
-        if (v[i].maior == false) {
-            normal = false;
-            break;
-        }
-    }
-
-    if (normal) {
-        for (int i = 0; i < *tam; i++) {
-            v[i].maior = false;
-        }
-    }
-
-    HEAP_CONSTROI(v, *tam);
-
-    return normal;
-}
-
-
-
-
-
-
-
+#include "../utils/heap.h"
 
 void imprime(Estrutura *v, int tam) {
     int cont = 0;
@@ -127,50 +11,50 @@ void imprime(Estrutura *v, int tam) {
     printf("\n");
 }
 
-// intercalacaoF1
-int main() {
-    // FILE* prova = fopen("../data/ProvaoAleatorio.dat", "rb");  // Arquivo de entrada
+// // intercalacaoF1
+// int main() {
+//     // FILE* prova = fopen("../data/ProvaoAleatorio.dat", "rb");  // Arquivo de entrada
 
-    FILE *prova = fopen("../data/AleatorioMenor.dat", "rb");  // teste
+//     FILE *prova = fopen("./data/AleatorioMenor.dat", "rb");  // teste
 
-    char nomes[TOTALFITA][TOTALFITA] = {""};  // Vetor de nomes para criar as fitas
-    FILE *arqvs[TOTALFITA];                   // Apontador para as fitas
-    Estrutura alunosEmMemoria[TAMFITAINT];    // voltat intam
-    int vetTam = 0;                           // Estrutura que guarda os alunos em memória
+//     char nomes[TOTALFITA][TOTALFITA] = {""};  // Vetor de nomes para criar as fitas
+//     FILE *arqvs[TOTALFITA];                   // Apontador para as fitas
+//     Estrutura alunosEmMemoria[TAMFITAINT];    // voltat intam
+//     int vetTam = 0;                           // Estrutura que guarda os alunos em memória
 
-    nomeiaArquivo(nomes);
-    criaArquivo(arqvs, nomes);
+//     nomeiaArquivo(nomes);
+//     criaArquivo(arqvs, nomes);
 
-    for (int i = 0; i < TAMFITAINT; i++) {
-        alunosEmMemoria[i].aluno = readFile(prova);
-        alunosEmMemoria[i].maior = false;
-        vetTam++;
-    }
+//     for (int i = 0; i < TAMFITAINT; i++) {
+//         alunosEmMemoria[i].aluno = readFile(prova);
+//         alunosEmMemoria[i].maior = false;
+//         vetTam++;
+//     }
 
-    HEAP_CONSTROI(alunosEmMemoria, vetTam);
-    geraBlocos(arqvs, alunosEmMemoria, prova, &vetTam);
+//     HEAP_CONSTROI(alunosEmMemoria, vetTam);
+//     geraBlocos(arqvs, alunosEmMemoria, prova, &vetTam);
 
-    intercalacao(arqvs, alunosEmMemoria, &vetTam);
+//     intercalacao(arqvs, alunosEmMemoria, &vetTam);
 
-    imprimeFitaSaida(arqvs); 
+//     imprimeFitaSaida(arqvs);
 
-    redistribuicao(arqvs, nomes);
+//     redistribuicao(arqvs, nomes);
 
-    fechaArq(arqvs);
-    fclose(prova);
+//     fechaArq(arqvs);
+//     fclose(prova);
 
-    return 0;
-}
+//     return 0;
+// }
 
 void nomeiaArquivo(char nomes[TOTALFITA][TOTALFITA]) {
     char buffer[3];
-    char aux[TOTALFITA] = {"../data/fita"};
+    char aux[TOTALFITA] = {"./data/fita"};
 
     for (int i = 1; i <= TOTALFITA; i++) {
         itoa(i, buffer, 10);
         strcat(aux, buffer);
         strcpy(nomes[i - 1], strcat(aux, ".dat"));
-        aux[12] = '\0';
+        aux[11] = '\0';
     }
 }
 
@@ -206,7 +90,7 @@ void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], F
             numfita += 1;
         }
 
-        if(*vetTam == 1) 
+        if (*vetTam == 1)
             fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[numfita]);
 
         if (numfita >= TAMFITAINT)
@@ -221,7 +105,6 @@ void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], F
         rewind(arqvs[i]);
         printf("FITA %d \n", i + 1);
         while (fread(&teste, sizeof(Alunos), 1, arqvs[i])) {
-
             printf("%d -", cont++);
             printf("%ld ", teste.inscricao);
             printf("%.2f ", teste.nota);
@@ -250,12 +133,12 @@ void intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT],
     while (*vetTam > 0) {
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
 
-        if(!fread(&aluno, sizeof(Alunos), 1, arqvs[alunosEmMemoria[0].posFita]))
+        if (!fread(&aluno, sizeof(Alunos), 1, arqvs[alunosEmMemoria[0].posFita]))
             aluno.nota = -1;
 
-        if (aluno.nota == -1) 
+        if (aluno.nota == -1)
             remove_No(alunosEmMemoria, vetTam);
-        else 
+        else
             substitui(alunosEmMemoria, vetTam, aluno);
 
         if (*vetTam == 0) {
@@ -277,7 +160,7 @@ void redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA]) {
         rewind(arqvs[i]);
     }
 
-    Alunos aux; // Aluno auxiliar para ler os arquivos
+    Alunos aux;  // Aluno auxiliar para ler os arquivos
 
     printf("REDISTRIBUICAO\n\n\n\n");
 
@@ -285,23 +168,23 @@ void redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA]) {
     while (fread(&aux, sizeof(Alunos), 1, arqvs[19]) != 0) {  // le o ultimo arquivo
         fwrite(&aux, sizeof(Alunos), 1, arqvs[contador]);     // escreve no arquivo correto
 
-        if (aux.nota == -1) { // se for -1, passa pra proxima fita 
+        if (aux.nota == -1) {  // se for -1, passa pra proxima fita
             fread(&aux, sizeof(Alunos), 1, arqvs[19]);
             contador++;
             ////////////////////////////////////////////////////////////////
-            fwrite(&aux, sizeof(Alunos), 1, arqvs[contador]); // vai dar problema se o contador for 19 !!!!!!!!!
+            fwrite(&aux, sizeof(Alunos), 1, arqvs[contador]);  // vai dar problema se o contador for 19 !!!!!!!!!
             ////////////////////////////////////////////////////////////////
         }
-        if (contador == 19) { // se for 19 volta pra primeira fita
+        if (contador == 19) {  // se for 19 volta pra primeira fita
             contador = 0;
         }
     }
-    
+
     // rewind para o inicio dos arquivos
     for (int i = 0; i < TOTALFITA; i++) {
         rewind(arqvs[i]);
     }
-    
+
     // printa os arquivos novamente
     printf("FITA 1\n");
     while (fread(&aux, sizeof(Alunos), 1, arqvs[0]) != 0) {
@@ -346,17 +229,16 @@ void redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA]) {
 
 void preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], int *vetTam) {
     Alunos aluno;
-    if(*vetTam != 0) {
-        for(int i = 0; i <= *vetTam; i++) {
+    if (*vetTam != 0) {
+        for (int i = 0; i <= *vetTam; i++) {
             rewind(arqvs[i]);
             fread(&alunosEmMemoria[i].aluno, sizeof(Alunos), 1, arqvs[i]);
             alunosEmMemoria[i].posFita = i;
             alunosEmMemoria[i].maior = false;
         }
-    }
-    else {
-        for(int j = 0,  i = 0; i < TAMFITAINT; i++) {
-            if(fread(&alunosEmMemoria[j].aluno, sizeof(Alunos), 1, arqvs[i])){
+    } else {
+        for (int j = 0, i = 0; i < TAMFITAINT; i++) {
+            if (fread(&alunosEmMemoria[j].aluno, sizeof(Alunos), 1, arqvs[i])) {
                 alunosEmMemoria[j].aluno = aluno;
                 alunosEmMemoria[j].posFita = i;
                 alunosEmMemoria[j++].maior = false;
@@ -375,7 +257,6 @@ void imprimeFitaSaida(FILE *arqvs[TOTALFITA]) {
     printf("\n\nFITA DE SAIDA\n");
 
     while (fread(&aluno, sizeof(Alunos), 1, arqvs[POSFITAEXT])) {
-
         printf("%d -", cont++);
         printf("%ld ", aluno.inscricao);
         printf("%.2f ", aluno.nota);

@@ -5,25 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// #include "heap.h"
+
+#include "../utils/heap.h"
 
 #define TOTALFITA 20
 #define TAMFITAINT 19
 #define POSFITAEXT 19
-
-typedef struct {
-    long inscricao;
-    float nota;
-    char estado[3];
-    char cidade[50];
-    char curso[30];
-} Alunos;
-
-typedef struct {
-    Alunos aluno;
-    bool maior;
-    int posFita;
-} Estrutura;
 
 void nomeiaArquivo(char nomes[20][20]);
 void criaArquivo(FILE *arqvs[20], char nomes[20][20]);
