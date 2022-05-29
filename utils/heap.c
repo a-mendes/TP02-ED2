@@ -2,6 +2,8 @@
 
 #include <stdbool.h>
 
+#include "arquivo.h"
+
 void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
     int i = esq;
     int j = i * 2 + 1;

@@ -1,4 +1,5 @@
-#include <time.h>
+#include "inter2F.h"
+#include "interF1.h"
 
 int main(int argc, char const *argv[]) {
     printf("TP1 - Estrutura de Dados II\n");
