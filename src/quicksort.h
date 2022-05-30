@@ -1,25 +1,25 @@
-// #ifndef quicksort_h
-// #define quicksort_h
+#ifndef quicksort_h
+#define quicksort_h
 
-// #include <stdbool.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #include <time.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-// #include "../utils/arquivo.h"
-// #include "../utils/heap.h"
+#include "../utils/arquivo.h"
+#include "../utils/heap.h"
 
-// /**
-//  * Para o método 3, deve ser considerada a existência de memória 
-//  * interna disponível para armazenar um vetor de, no máximo, 10 registros.
-//  */
+/**
+ * Para o método 3, deve ser considerada a existência de memória 
+ * interna disponível para armazenar um vetor de, no máximo, 10 registros.
+ */
 
-// #define TAM_MEMORIA_INTERNA 10
-// #define TAM_TOTAL_REGISTROS 471705
+#define TAM_MEMORIA_INTERNA 10
+#define TAM_TOTAL_REGISTROS 471705
 
-// typedef Alunos[TAM_MEMORIA_INTERNA] TipoArea;
+typedef Alunos[TAM_MEMORIA_INTERNA] TipoArea;
 
-// void quicksort(int quantidade, int situacao, int opcional);
+void quicksort(int quantidade, int situacao, int opcional);
 
-// #endif
+#endif
