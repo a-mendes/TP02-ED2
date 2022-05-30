@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "../utils/arquivo.h"
 #include "../utils/heap.h"
@@ -16,6 +17,8 @@
 
 #define TAM_MEMORIA_INTERNA 10
 #define TAM_TOTAL_REGISTROS 471705
+
+typedef Alunos[TAM_MEMORIA_INTERNA] TipoArea;
 
 void quicksort(int quantidade, int situacao, int opcional);
 

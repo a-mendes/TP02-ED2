@@ -28,6 +28,11 @@ int main(int argc, char const *argv[]) {
         }
     }
 
+    /** 
+     * Implementar aqui chamadas para geração de arquivos ordenados 
+     * ascendentemente e descendentemente
+     */
+    
     //Menu de acesso às pesquisas
     switch (metodo) {
         case 1:
