@@ -7,6 +7,7 @@
 #include <string.h>
 #include <time.h>
 #include <limits.h>
+#include <float.h>
 
 #include "../utils/arquivo.h"
 #include "../utils/heap.h"
