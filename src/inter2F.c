@@ -23,8 +23,8 @@ void intercalacao2F(int quantidade, int situacao, int opcional) {
     FILE *arqvs[TOTALFITA];  // Apontador para as fitas
     criaArquivo(arqvs, nomes);
 
-    int vetTam = 0;                            // Estrutura que guarda os alunos em memória
-    Estrutura alunosEmMemoria[FF_TAMFITAINT];  // voltat intam;
+    int vetTam = 0;  // Estrutura que guarda os alunos em memória
+    Estrutura alunosEmMemoria[FF_TAMFITAINT];
     for (int i = 0; i < FF_TAMFITAINT; i++) {
         alunosEmMemoria[i].aluno = readFile(prova);
         alunosEmMemoria[i].maior = false;
@@ -36,8 +36,10 @@ void intercalacao2F(int quantidade, int situacao, int opcional) {
     int tamEntrada = FF_inicializarMemoriaIntercalacao(arqvs, alunosEmMemoria, 0);
     int fitaSaida = FF_intercalacao(arqvs, alunosEmMemoria, 0, FF_POSFITAEXT, tamEntrada, 1);
 
-    printf("FITA %d \n", fitaSaida);
-    imprimirFita(arqvs[fitaSaida], quantidade);
+    if (opcional) {
+        printf("\n\n\nRESULTADO: FITA %d \n", fitaSaida);
+        imprimirFita(arqvs[fitaSaida], quantidade);
+    }
 
     fechaArq(arqvs);
     fclose(prova);
