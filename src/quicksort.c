@@ -91,6 +91,18 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir, int *
 	//implementar
 }
 
+void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
+	//implementar
+}
+
+void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
+	//implementar
+}
+
+void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
+	//implementar
+}
+
 void escolherArquivoPorSituacao(int situacao, char* nomeArquivo){
 	switch(situacao){
 		case 1: nomeArquivo = "data/ProvaoAscendente.dat";
