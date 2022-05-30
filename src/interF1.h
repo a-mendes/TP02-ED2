@@ -20,7 +20,9 @@ int intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], 
 void redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA], int *vetTam);
 
 void preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], int *vetTam);
+FILE* escolherArquivoPorSituacao(int situacao);
 void imprimeFitaSaida(FILE *arqvs[TOTALFITA]);
+void exibirResultados(int opcional, FILE *arqvs[TOTALFITA]);
 
 
 #endif

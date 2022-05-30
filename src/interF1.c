@@ -3,14 +3,15 @@
 #include "../utils/arquivo.h"
 #include "../utils/heap.h"
 
-void imprime(Estrutura *v, int tam) {
-    int cont = 0;
-    printf("\n");
-    for (int i = 0; i < tam; i++) {
-        printf("%d - %ld %.1f %s %s %s T/F: %d \n", cont++, v[i].aluno.inscricao, v[i].aluno.nota, v[i].aluno.estado, v[i].aluno.cidade, v[i].aluno.curso, v[i].maior);
-    }
-    printf("\n");
-}
+int numLeitura = 0;
+int numEscrita = 0;
+int numComparacoes = 0;
+clock_t tempoInicial;
+clock_t tempoFinal;
+
+/// COMENTAR E MOSTRAR AS ANALISES ///////////////////////////////////////////
+////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
 
 int intercalacaoF1(int quantidade, int situacao, int opcional) {
@@ -21,25 +22,12 @@ int intercalacaoF1(int quantidade, int situacao, int opcional) {
     Estrutura alunosEmMemoria[TAMFITAINT];    // voltat intam;
     int vetTam = 0;                           // Estrutura que guarda os alunos em memória
 
-    switch (situacao) {
-        case 1:
-            prova = fopen("./data/ProvaoAscendente.dat", "rb");
-            break;
-        case 2:
-            //prova = fopen("./data/ProvaoDescendente.dat", "rb");
-            break;
-        case 3:
-            prova = fopen("./data/ProvaoAleatorio.dat", "rb");
-            break;
-
-        default:
-            printf("Tu é um animal que não sabe contar\n");
-            break;
-    }
+    prova = escolherArquivoPorSituacao(situacao);
 
     nomeiaArquivo(nomes);
     criaArquivo(arqvs, nomes);
 
+    
     for (int i = 0; i < TAMFITAINT; i++) {
         alunosEmMemoria[i].aluno = readFile(prova);
         alunosEmMemoria[i].maior = false;
@@ -53,13 +41,26 @@ int intercalacaoF1(int quantidade, int situacao, int opcional) {
         redistribuicao(arqvs, nomes, &vetTam);
     }
 
-    if(opcional)
-        imprimeFitaSaida(arqvs);
+    exibirResultados(opcional, arqvs);
 
     fechaArq(arqvs);
     fclose(prova);
 
     return 0;
+}
+
+FILE* escolherArquivoPorSituacao(int situacao){
+	switch(situacao){
+		case 1: return fopen("./data/ProvaoAscendente.dat", "rb");
+				
+		case 2: return fopen("./data/ProvaoDescendente.dat", "rb");
+				
+		case 3: return fopen("./data/ProvaoAleatorio.dat", "rb");
+	 
+        default:
+            printf("Tu é um animal que não sabe contar\n");
+            break;
+	}
 }
 
 void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], FILE *prova, int *vetTam, int quantidade) {
@@ -223,4 +224,26 @@ void imprimeFitaSaida(FILE *arqvs[TOTALFITA]) {
         printf("%s \n", aluno.curso);
     }
     printf("\n\n");
+}
+
+void exibirResultados(int opcional, FILE *arqvs[TOTALFITA]){
+	
+	if(opcional){
+		imprimeFitaSaida(arqvs);
+	}
+
+	/**
+	 * Tempo de execução em segundos
+	 */
+
+	double tempoExecucao = ((double)tempoFinal - tempoInicial) / CLOCKS_PER_SEC;
+
+	printf("\n___________________________________");
+	printf("\n            Resultados             ");
+	printf("\n-----------------------------------");
+	printf("\n# Tempo  de Execucao: %lf seg  ", tempoExecucao);
+	printf("\n# Numero de Leituras: %d      ", numLeitura);
+	printf("\n# Numero de Escritas: %d      ", numEscrita);
+	printf("\n# Numero de Comparacoes: %d   ", numComparacoes);
+	printf("\n __________________________________");
 }
