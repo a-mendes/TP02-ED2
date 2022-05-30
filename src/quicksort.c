@@ -14,9 +14,30 @@ clock_t tempoExecucaoFim;
  */
 void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir);
 void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq, int dir, int *i, int *j);
-void escolherArquivoPorSituacao(int situacao, char* nomeArquivo);
-void exibirResultados(opcional);
 
+void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer);
+void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer);
+
+void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea);
+void insereItem(Alunos *ultimoLido, TipoArea *area);
+
+void escreveMax(FILE **arqLEs, Alunos R, int *es);
+void escreveMin(FILE **arqEi, Alunos R, int *ei);
+
+void retiraMax(TipoArea *area, Alunos *R, int *NRArea);
+void retiraMin(TipoArea *area, Alunos *R, int *NRArea);
+void retiraUltimo(TipoArea *area, Alunos *R);
+void retiraPrimeiro(TipoArea *area, Alunos *R);
+
+void criaAreaVazia(TipoArea *area);
+int obterNumCelulasOcupadas(TipoArea *area);
+
+void escolherArquivoPorSituacao(int situacao, char* nomeArquivo);
+void exibirResultados(int opcional);
+
+/**
+ * Função chamada pela main
+ */ 
 void quicksort(int quantidade, int situacao, int opcional){
 	
 	/**
@@ -70,7 +91,14 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 	if(dir <= esq)
 		return;
 
-	//Define subarquivos
+	/**
+	 * Cria área e define todas as células de área como NULL
+	 */
+	criaAreaVazia(&area);
+
+	/**
+	 * Define subarquivos
+	 */ 
 	particao(arqLi, arqEi, arqLEs, area, esq, dir, &i, &j);
 
 	/**
@@ -85,6 +113,11 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 		quicksortExterno(arqLi, arqEi, arqLEs, j, dir);
 		quicksortExterno(arqLi, arqEi, arqLEs, esq, i);
 	}
+
+	/**
+	 * Desaloca área
+	 */ 
+	free(&area);
 }
 
 void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq, int dir, int *i, int *j){
@@ -131,41 +164,41 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq,
 		
 		if(ultimoLido.nota > Lsup){
 			*j = es;
-			EscreveMax(arqLEs, ultimoLido, &es);
+			escreveMax(arqLEs, ultimoLido, &es);
 			continue;
 		}
 
 		if(ultimoLido.nota > Linf){
 			*j = es;
-			EscreveMax(arqLEs, ultimoLido, &es);
+			escreveMax(arqLEs, ultimoLido, &es);
 			continue;
 		}
 		
 		inserirArea(&Area, &ultimoLido, &NRArea);
 		if(ei - esq < dir - es){
-			RetiraMin(&Area, &R, &NRArea);
-			EscreveMin(arqEi, R, &ei);
+			retiraMin(&Area, &R, &NRArea);
+			escreveMin(arqEi, R, &ei);
 			
 			Linf = R.nota;
 		}
 
 		else {
-			RetiraMax(&Area, &R, &NRArea);
-			EscreveMax(arqLEs, R, &es);
+			retiraMax(&Area, &R, &NRArea);
+			escreveMax(arqLEs, R, &es);
 			
 			Linf = R.nota;
 		}
 	}
 
 	while (ei <= es){
-		RetiraMin(&Area, &R, &NRArea);
-		EscreveMin(arqEi, R, &ei);
+		retiraMin(&Area, &R, &NRArea);
+		escreveMin(arqEi, R, &ei);
 	}
 }
 
 
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
-	fseek(&arqLEs, (*ls - 1) * sizeof(Alunos), SEEK_SET);
+	fseek(*arqLEs, (*ls - 1) * sizeof(Alunos), SEEK_SET);
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
 	ls--; 
 	*ondeLer = false;
@@ -193,31 +226,42 @@ void escreveMin(FILE **arqEi, Alunos R, int *ei){
 	(*ei)++;
 }
 
-void insereItem(Alunos *ultimoLido, TipoArea area){
+void insereItem(Alunos *ultimoLido, TipoArea *area){
 	//Implementar
 }
 
-void retiraMax(TipoArea *area, Alunos R, int *NRArea){
+void retiraMax(TipoArea *area, Alunos *R, int *NRArea){
 	retiraUltimo(area, R);
 	*NRArea = obterNumCelulasOcupadas(area);
 }
 
-void retiraMin(TipoArea *area, Alunos R, int *NRArea){
+void retiraMin(TipoArea *area, Alunos *R, int *NRArea){
 	retiraPrimeiro(area, R);
 	*NRArea = obterNumCelulasOcupadas(area);
 }
 
-void retiraUltimo(TipoArea *area, Alunos R){
+void retiraUltimo(TipoArea *area, Alunos *R){
 	//Implementar
 }
 
-void retiraPrimeiro(TipoArea *area, Alunos R){
+void retiraPrimeiro(TipoArea *area, Alunos *R){
 	//Implementar
+}
+
+void criaAreaVazia(TipoArea *area){
+	area = malloc(sizeof(TipoArea) * TAM_MEMORIA_INTERNA);
+	for (int i = 0; i < TAM_MEMORIA_INTERNA; i++){
+		area[i].inscricao = -1;
+	}
 }
 
 int obterNumCelulasOcupadas(TipoArea *area){
-	//Implementar
-	return 0;
+	int contador = 0;
+	for (int i = 0; i < TAM_MEMORIA_INTERNA; i++)
+		if(area[i].inscricao != -1)
+			contador++;
+	
+	return contador;
 }
 
 void escolherArquivoPorSituacao(int situacao, char* nomeArquivo){
@@ -240,7 +284,7 @@ void exibirResultados(int opcional){
 	/**
 	 * Tempo de execução em segundos
 	 */
-	double tempoExecucao = ((double)t) / CLOCKS_PER_SEC;
+	double tempoExecucao = (((double) tempoExecucaoInicio) - ((double) tempoExecucaoFim)) / CLOCKS_PER_SEC;
 
 	printf("\n______________________________");
 	printf("\n          Resultados          ");
