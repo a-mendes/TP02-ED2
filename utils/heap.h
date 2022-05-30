@@ -8,10 +8,19 @@
 
 #include "arquivo.h"
 
+typedef struct {
+    int numLeitura;
+    int numEscrita;
+    long long int numComparacoes;
+    clock_t tempoInicial;
+    clock_t tempoFinal; 
+} Analise;
+
+
 void HEAP_REFAZ(Estrutura *v, int esq, int dir);
-void HEAP_CONSTROI(Estrutura *v, int tam);
+int HEAP_CONSTROI(Estrutura *v, int tam);
 void Insere_No(Estrutura *v, Alunos elem, int *tam);
-bool remove_No(Estrutura *v, int *tam);
-bool substitui(Estrutura *v, int *tam, Alunos elem);
+bool remove_No(Estrutura *v, int *tam, Analise *comp);
+bool substitui(Estrutura *v, int *tam, Alunos elem, Analise *comp);
 
 #endif

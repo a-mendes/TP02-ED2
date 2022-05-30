@@ -3,19 +3,17 @@
 #include "../utils/arquivo.h"
 #include "../utils/heap.h"
 
-int numLeitura = 0;
-int numEscrita = 0;
-int numComparacoes = 0;
-clock_t tempoInicial;
-clock_t tempoFinal;
+Analise analise;
 
 /// COMENTAR E MOSTRAR AS ANALISES ///////////////////////////////////////////
 ////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
-
 int intercalacaoF1(int quantidade, int situacao, int opcional) {
     FILE *prova;
+    analise.numComparacoes = 0;
+    analise.numEscrita = 0;
+    analise.numLeitura = 0;
     // FILE *prova = fopen("./data/AleatorioMenor.dat", "rb");  // teste
     char nomes[TOTALFITA][TOTALFITA] = {""};  // Vetor de nomes para criar as fitas
     FILE *arqvs[TOTALFITA];                   // Apontador para as fitas
@@ -34,7 +32,7 @@ int intercalacaoF1(int quantidade, int situacao, int opcional) {
         vetTam++;
     }
 
-    HEAP_CONSTROI(alunosEmMemoria, vetTam);
+    analise.numComparacoes += HEAP_CONSTROI(alunosEmMemoria, vetTam);
     geraBlocos(arqvs, alunosEmMemoria, prova, &vetTam, quantidade);
 
     while(intercalacao(arqvs, alunosEmMemoria, &vetTam)) { 
@@ -74,12 +72,12 @@ void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], F
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[numfita]);
 
         if (feof(prova) || cont >= quantidade) {
-            if (remove_No(alunosEmMemoria, vetTam) || *vetTam == 1) {
+            if (remove_No(alunosEmMemoria, vetTam, &analise) || *vetTam == 1) {
                 fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[numfita]);
                 if(*vetTam != 1)
                     numfita += 1;
             }
-        } else if (substitui(alunosEmMemoria, vetTam, readFile(prova))) {
+        } else if (substitui(alunosEmMemoria, vetTam, readFile(prova), &analise)) {
             fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[numfita]);
             numfita += 1;
         }
@@ -129,9 +127,9 @@ int intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], 
             aluno.nota = -1;
 
         if (aluno.nota == -1)
-            remove_No(alunosEmMemoria, vetTam);
+            remove_No(alunosEmMemoria, vetTam, &analise);
         else
-            substitui(alunosEmMemoria, vetTam, aluno);
+            substitui(alunosEmMemoria, vetTam, aluno, &analise);
 
         if (*vetTam == 0) {
             blocosFitaSaida++;
@@ -155,7 +153,7 @@ void preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFI
             *vetTam += 1;
         }
     }
-    HEAP_CONSTROI(alunosEmMemoria, *vetTam);
+    analise.numComparacoes += HEAP_CONSTROI(alunosEmMemoria, *vetTam);
 }
 
 
@@ -236,14 +234,14 @@ void exibirResultados(int opcional, FILE *arqvs[TOTALFITA]){
 	 * Tempo de execução em segundos
 	 */
 
-	double tempoExecucao = ((double)tempoFinal - tempoInicial) / CLOCKS_PER_SEC;
+	double tempoExecucao = ((double)analise.tempoFinal - analise.tempoInicial) / CLOCKS_PER_SEC;
 
 	printf("\n___________________________________");
 	printf("\n            Resultados             ");
 	printf("\n-----------------------------------");
 	printf("\n# Tempo  de Execucao: %lf seg  ", tempoExecucao);
-	printf("\n# Numero de Leituras: %d      ", numLeitura);
-	printf("\n# Numero de Escritas: %d      ", numEscrita);
-	printf("\n# Numero de Comparacoes: %d   ", numComparacoes);
+	printf("\n# Numero de Leituras: %d      ", analise.numLeitura);
+	printf("\n# Numero de Escritas: %d      ", analise.numEscrita);
+	printf("\n# Numero de Comparacoes: %lld   ", analise.numComparacoes);
 	printf("\n __________________________________");
 }

@@ -4,6 +4,8 @@
 
 #include "arquivo.h"
 
+int numComp = 0;
+
 void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
     int i = esq;
     int j = i * 2 + 1;
@@ -12,14 +14,18 @@ void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
     while (j <= dir) {
         if (j < dir && ((v[j].aluno.nota > v[j + 1].aluno.nota || v[j].maior == true) && v[j + 1].maior != true)) {
             j = j + 1;  // j recebe o outro filho de i
+            numComp += 1;  
         }
         if (j < dir && v[j].aluno.nota > v[j + 1].aluno.nota && v[j].maior == true && v[j + 1].maior == true) {
             j = j + 1;
+            numComp += 1;  
         }
         if (aux.aluno.nota <= v[j].aluno.nota && aux.maior != true) {
+            numComp += 1;
             break;
         }
         if (aux.aluno.nota >= v[j].aluno.nota && v[j].maior == true && aux.maior != true) {
+            numComp += 1;
             break;
         }
 
@@ -31,12 +37,14 @@ void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
     v[i] = aux;
 }
 
-void HEAP_CONSTROI(Estrutura *v, int tam) {
+int HEAP_CONSTROI(Estrutura *v, int tam) {
+    numComp = 0;
     int esq = (tam / 2) - 1;
     while (esq >= 0) {
         HEAP_REFAZ(v, esq, tam - 1);
         esq--;
     }
+    return numComp;
 }
 
 void Insere_No(Estrutura *v, Alunos elem, int *tam) {
@@ -56,7 +64,7 @@ void Insere_No(Estrutura *v, Alunos elem, int *tam) {
     }
 }
 
-bool remove_No(Estrutura *v, int *tam) {
+bool remove_No(Estrutura *v, int *tam, Analise *comp) {
     if (*tam == 0) {
         return false;
     } else {
@@ -74,17 +82,18 @@ bool remove_No(Estrutura *v, int *tam) {
 
     if (normal) {
         for (int i = 0; i < *tam; i++) {
-            if ((int)v[i].aluno.nota != -1)
+            if (v[i].aluno.nota != -1) {
                 v[i].maior = false;
+            }
         }
     }
 
-    HEAP_CONSTROI(v, *tam);
+    comp->numComparacoes += HEAP_CONSTROI(v, *tam);
 
     return normal;
 }
 
-bool substitui(Estrutura *v, int *tam, Alunos elem) {
+bool substitui(Estrutura *v, int *tam, Alunos elem, Analise *comp) {
     if (*tam == 0) {
         return false;
     } else {
@@ -107,12 +116,13 @@ bool substitui(Estrutura *v, int *tam, Alunos elem) {
 
     if (normal) {
         for (int i = 0; i < *tam; i++) {
-            if ((int)v[i].aluno.nota != -1)
+            if ((int)v[i].aluno.nota != -1) {
                 v[i].maior = false;
+            }
         }
     }
 
-    HEAP_CONSTROI(v, *tam);
+    comp->numComparacoes += HEAP_CONSTROI(v, *tam);
 
     return normal;
 }
