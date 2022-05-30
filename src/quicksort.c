@@ -38,7 +38,7 @@ void exibeArea(TipoArea *area);
 void copiarAluno(Alunos *destino, Alunos origem);
 
 void escolherArquivoPorSituacaoQuick(int situacao, char* nomeArquivo);
-void exibirResultadosQuick(int opcional, char *nomeArquivo);
+void exibirResultadosQuick(int opcional, char *nomeArquivo, int quantidade);
 
 /**
  * Função chamada pela main
@@ -85,14 +85,12 @@ void quicksort(int quantidade, int situacao, int opcional){
 	/**
 	 * Exibição de resultados de desempenho
 	 */ 
-	exibirResultadosQuick(opcional, nomeArquivo);
+	exibirResultadosQuick(opcional, nomeArquivo, quantidade);
 }
 
 void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir){
 	TipoArea *area;
 	int i, j;
-
-	//printf("\nTESTE: quicksortExterno");
 
 	/**
 	 * Se o indice da direita for menor ou igual ao indice da esquerda,
@@ -132,8 +130,6 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 }
 
 void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq, int dir, int *i, int *j){
-	//printf("\nTESTE: particao");
-
 	int ls = dir, es = dir, li = esq, ei = esq, NRArea = 0, Linf = INT_MIN, Lsup = INT_MAX;
 	short ondeLer = true; 
 	Alunos ultimoLido, R;
@@ -146,11 +142,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 	/**
 	 * A partição é feita até que Li e Ls se cruzem
 	 */ 
-	int counterIter = 0;
 	while(ls >= li){
-		printf("\nCounter: %d", counterIter);
-		counterIter++;
-
 		if(NRArea < TAM_MEMORIA_INTERNA - 1){	
 			if (ondeLer)
 				leSup(arqLEs, &ultimoLido, &ls, &ondeLer);
@@ -178,7 +170,6 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 		else
 			leInf(arqLi, &ultimoLido, &li, &ondeLer);
 		
-		printf("\nUltimoLido.nota: %.2f", ultimoLido.nota);
 		if(ultimoLido.nota > Lsup){
 			*j = es;
 			escreveMax(arqLEs, ultimoLido, &es);
@@ -216,7 +207,6 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 
 
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
-	//printf("\nTESTE: leSup");
 	fseek(*arqLEs, (*ls - 1) * sizeof(Alunos), SEEK_SET);
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
 	(*ls)--; 
@@ -224,45 +214,32 @@ void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
 }
 
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
-	//printf("\nTESTE: leInf");
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLi);
 	(*li)++; 
 	*ondeLer = true;
 }
 
 void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
-	//printf("\nTESTE: inserirArea");
-
 	insereItem(ultimoLido, area);
 	*NRArea = obterNumCelulasOcupadas(area);
 }
 
 void escreveMax(FILE **arqLEs, Alunos R, int *es){
-	//printf("\nTESTE: escreveMax");
-
 	fseek(*arqLEs, (*es - 1) * sizeof(Alunos), SEEK_SET);
 	fwrite(&R, sizeof(Alunos), 1, *arqLEs);
 	(*es)--;
 }
 
 void escreveMin(FILE **arqEi, Alunos R, int *ei){
-	//printf("\nTESTE: escreveMin");
-
 	fwrite(&R, sizeof(Alunos), 1, *arqEi);
 	(*ei)++;
 }
 
 void insereItem(Alunos *ultimoLido, TipoArea *area){
-	//printf("\nTESTE: insereItem");
-
 	/**
 	 * Variável i representa o indice da primeira celula desocupada da área
 	 */ 
 	int i = obterNumCelulasOcupadas(area);
-
-	//printf("\n\tprimeira celula desocupada da área: %d", i);
-	//printf("\n\tinscricao origem: %ld", ultimoLido->inscricao);
-
 	
 	/**
 	 * Copia as informações do ultimo lido para a primeira celula desocupada da área
@@ -273,22 +250,16 @@ void insereItem(Alunos *ultimoLido, TipoArea *area){
 }
 
 void retiraMax(TipoArea *area, Alunos *R, int *NRArea){
-	//printf("\nTESTE: retiraMax");
-
 	retiraUltimo(area, R);
 	*NRArea = obterNumCelulasOcupadas(area);
 }
 
 void retiraMin(TipoArea *area, Alunos *R, int *NRArea){
-	//printf("\nTESTE: retiraMin");
-
 	retiraPrimeiro(area, R);
 	*NRArea = obterNumCelulasOcupadas(area);
 }
 
 void retiraUltimo(TipoArea *area, Alunos *R){
-	//printf("\nTESTE: retiraUltimo");
-
 	/**
 	 * Variável i representa o indice da última célula da área
 	 */
@@ -303,8 +274,6 @@ void retiraUltimo(TipoArea *area, Alunos *R){
 }
 
 void retiraPrimeiro(TipoArea *area, Alunos *R){
-	//printf("\nTESTE: retiraPrimeiro");
-
 	/**
 	 * Variável i representa o primeiro indice da área
 	 */
@@ -325,7 +294,6 @@ void retiraPrimeiro(TipoArea *area, Alunos *R){
 }
 
 TipoArea* criaAreaVazia(TipoArea *area){
-	//printf("\nTESTE: criaAreaVazia");
 	area = malloc(sizeof(TipoArea) * TAM_MEMORIA_INTERNA);
 	for (int i = 0; i < TAM_MEMORIA_INTERNA; i++){
 		Alunos *aluno = malloc(sizeof(Alunos));
@@ -336,7 +304,6 @@ TipoArea* criaAreaVazia(TipoArea *area){
 	}
 
 	return area;
-	//exibeArea(area);
 }
 
 void exibeArea(TipoArea *area){
@@ -353,7 +320,6 @@ void exibeArea(TipoArea *area){
 }
 
 void ordenaArea(TipoArea *area){
-	//printf("\nTESTE: ordenaArea");
 	/**
 	 * O método Shell Sort foi escohido para a ordenação da área
 	 * pois sua implementação independe de recursão
@@ -383,35 +349,21 @@ void ordenaArea(TipoArea *area){
 }
 
 int obterNumCelulasOcupadas(TipoArea *area){
-	//printf("\nTESTE: obterNumCelulasOcupadas");
-
-	//exibeArea(area);
-
 	int contador = 0;
 	for (int i = 0; i < TAM_MEMORIA_INTERNA; i++){
-		//printf("\n\ti: %d", i);
-		//printf("\n\tinscricao: %ld", area[i]->inscricao);
-
 		if(area[i]->inscricao != -1)
 			contador++;
-
-		//printf("\n\tcontador: %d", contador);
 	}
 
 	return contador;
 }
 
 void copiarAluno(Alunos *destino, Alunos origem){
-	//printf("\nTESTE: copiarAluno");
-	//printf("\n\t inscricao origem: %ld", origem.inscricao);
-
 	destino->inscricao = origem.inscricao;
 	destino->nota = origem.nota;
 	strcpy(destino->estado, origem.estado);
 	strcpy(destino->cidade, origem.cidade);
 	strcpy(destino->curso, origem.curso);
-
-	//printf("\n\t inscricao destino: %ld", destino->inscricao);
 }
 
 void escolherArquivoPorSituacaoQuick(int situacao, char* nomeArquivo){
@@ -425,7 +377,7 @@ void escolherArquivoPorSituacaoQuick(int situacao, char* nomeArquivo){
 	}
 }
 
-void exibirResultadosQuick(int opcional, char *nomeArquivo){
+void exibirResultadosQuick(int opcional, char *nomeArquivo, int quantidade){
 	
 	if(opcional){
 
@@ -436,7 +388,7 @@ void exibirResultadosQuick(int opcional, char *nomeArquivo){
 		printf("\n               Registros              ");
 		printf("\n--------------------------------------");
 		
-		for(int i = 0; i < TAM_TOTAL_REGISTROS; i++){
+		for(int i = 0; i < quantidade; i++){
 			Alunos atual;
 			fread(&atual, sizeof(Alunos), 1, arq);
 
@@ -458,9 +410,9 @@ void exibirResultadosQuick(int opcional, char *nomeArquivo){
 	printf("\n______________________________");
 	printf("\n          Resultados          ");
 	printf("\n------------------------------");
-	printf("\n• Tempo de Execucao: %lf seg  ", tempoExecucao);
-	printf("\n• Numero de Leituras: %d      ", numLeituraQuick);
-	printf("\n• Numero de Escritas: %d      ", numEscritaQuick);
-	printf("\n• Numero de Comparacoes: %d   ", numComparacoesQuick);
+	printf("\n- Tempo de Execucao: %lf seg  ", tempoExecucao);
+	printf("\n- Numero de Leituras: %d      ", numLeituraQuick);
+	printf("\n- Numero de Escritas: %d      ", numEscritaQuick);
+	printf("\n- Numero de Comparacoes: %d   ", numComparacoesQuick);
 	printf("\n ____________________________ ");
 }
