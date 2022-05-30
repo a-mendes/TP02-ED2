@@ -74,7 +74,8 @@ bool remove_No(Estrutura *v, int *tam) {
 
     if (normal) {
         for (int i = 0; i < *tam; i++) {
-            v[i].maior = false;
+            if ((int)v[i].aluno.nota != -1)
+                v[i].maior = false;
         }
     }
 
@@ -106,7 +107,8 @@ bool substitui(Estrutura *v, int *tam, Alunos elem) {
 
     if (normal) {
         for (int i = 0; i < *tam; i++) {
-            v[i].maior = false;
+            if ((int)v[i].aluno.nota != -1)
+                v[i].maior = false;
         }
     }
 
