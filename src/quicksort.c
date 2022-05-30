@@ -170,12 +170,14 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 		else
 			leInf(arqLi, &ultimoLido, &li, &ondeLer);
 		
+		numComparacoesQuick++;
 		if(ultimoLido.nota > Lsup){
 			*j = es;
 			escreveMax(arqLEs, ultimoLido, &es);
 			continue;
 		}
 
+		numComparacoesQuick++;
 		if(ultimoLido.nota < Linf){
 			*i = ei;
 			escreveMin(arqEi, ultimoLido, &ei);
@@ -211,12 +213,24 @@ void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
 	(*ls)--; 
 	*ondeLer = false;
+
+	printf("\nultimoLido lesup %ld \t%.2f \t%s \t%s \t%s", 
+		 ultimoLido->inscricao, ultimoLido->nota, ultimoLido->estado, ultimoLido->cidade, ultimoLido->curso);
+
+	
+	numLeituraQuick++;
 }
 
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLi);
 	(*li)++; 
 	*ondeLer = true;
+
+	printf("\nultimoLido leinf%ld \t%.2f \t%s \t%s \t%s", 
+		 ultimoLido->inscricao, ultimoLido->nota, ultimoLido->estado, ultimoLido->cidade, ultimoLido->curso);
+
+
+	numLeituraQuick++;
 }
 
 void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
@@ -228,11 +242,15 @@ void escreveMax(FILE **arqLEs, Alunos R, int *es){
 	fseek(*arqLEs, (*es - 1) * sizeof(Alunos), SEEK_SET);
 	fwrite(&R, sizeof(Alunos), 1, *arqLEs);
 	(*es)--;
+
+	numEscritaQuick++;
 }
 
 void escreveMin(FILE **arqEi, Alunos R, int *ei){
 	fwrite(&R, sizeof(Alunos), 1, *arqEi);
 	(*ei)++;
+
+	numEscritaQuick++;
 }
 
 void insereItem(Alunos *ultimoLido, TipoArea *area){
@@ -243,8 +261,14 @@ void insereItem(Alunos *ultimoLido, TipoArea *area){
 	
 	/**
 	 * Copia as informações do ultimo lido para a primeira celula desocupada da área
-	 */  
+	 */
+	 //printf("\nultimoLido %ld \t%.2f \t%s \t%s \t%s", 
+	//	 ultimoLido->inscricao, ultimoLido->nota, ultimoLido->estado, ultimoLido->cidade, ultimoLido->curso);
+  
 	copiarAluno(area[i], *ultimoLido);
+	printf("\ninserido %ld \t%.2f \t%s \t%s \t%s", 
+		 area[i]->inscricao, area[i]->nota, area[i]->estado, area[i]->cidade, area[i]->curso);
+
 
 	ordenaArea(area);
 }
