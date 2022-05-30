@@ -1,6 +1,9 @@
 #include "inter2F.h"
 
 #include "../utils/arquivo.h"
+#include "../utils/heap.h"
+
+Analise analise;
 
 void FF_imprime(Estrutura *v, int tam) {
     int cont = 0;
@@ -12,6 +15,10 @@ void FF_imprime(Estrutura *v, int tam) {
 }
 
 void intercalacao2F(int quantidade, int situacao, int opcional) {
+    analise.numComparacoes = 0;
+    analise.numEscrita = 0;
+    analise.numLeitura = 0;
+
     FILE *prova = escolherArquivoPorSituacao(situacao);
     if (opcional) {
         printf("Arquivo a ser ordenado: \n");
@@ -33,13 +40,12 @@ void intercalacao2F(int quantidade, int situacao, int opcional) {
 
     HEAP_CONSTROI(alunosEmMemoria, vetTam);
     FF_geraBlocos(arqvs, alunosEmMemoria, prova, &vetTam, quantidade);
+    analise.tempoInicial = clock();
     int tamEntrada = FF_inicializarMemoriaIntercalacao(arqvs, alunosEmMemoria, 0);
     int fitaSaida = FF_intercalacao(arqvs, alunosEmMemoria, 0, FF_POSFITAEXT, tamEntrada, 1);
+    analise.tempoFinal = clock();
 
-    if (opcional) {
-        printf("\n\n\nRESULTADO: FITA %d \n", fitaSaida);
-        imprimirFita(arqvs[fitaSaida], quantidade);
-    }
+    FF_exibirResultados(quantidade, opcional, arqvs, fitaSaida);
 
     fechaArq(arqvs);
     fclose(prova);
@@ -60,11 +66,11 @@ void FF_geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAI
     while (*vetTam > 1 && count < quantidade) {
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[numfita]);
         if (feof(prova)) {
-            if (remove_No(alunosEmMemoria, vetTam)) {
+            if (remove_No(alunosEmMemoria, vetTam, &analise)) {
                 fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[numfita]);
                 numfita += 1;
             }
-        } else if (substitui(alunosEmMemoria, vetTam, readFile(prova))) {
+        } else if (substitui(alunosEmMemoria, vetTam, readFile(prova), &analise)) {
             fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[numfita]);
             numfita += 1;
         }
@@ -93,6 +99,7 @@ int FF_inicializarMemoriaIntercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEm
     int firstIndex = getFirstCurrentIndex(fitaEntradaInicial);
     for (int i = 0; i < FF_TAMFITAINT; i++) {
         if (fread(&aluno, sizeof(Alunos), 1, arqvs[firstIndex + i]) && aluno.nota != -1) {
+            analise.numLeitura++;
             alunosEmMemoria[countFitasNaoVazias].aluno = aluno;
             alunosEmMemoria[countFitasNaoVazias].maior = false;
             alunosEmMemoria[countFitasNaoVazias].posFita = firstIndex + i;
@@ -122,14 +129,16 @@ int FF_intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITA
     while (tamEntrada > 0) {
         fitaEntradaAtual = alunosEmMemoria[0].posFita;
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[fitaSaidaAtual]);
+        analise.numEscrita++;
 
         Alunos aluno;
         bool novaFita = false;
+        analise.numLeitura++;
         if (feof(arqvs[fitaEntradaAtual]) || !fread(&aluno, sizeof(Alunos), 1, arqvs[fitaEntradaAtual]) || aluno.nota == -1) {
-            novaFita = remove_No(alunosEmMemoria, &tamEntrada);
+            novaFita = remove_No(alunosEmMemoria, &tamEntrada, &analise);
         } else {
             alunosEmMemoria[0].posFita = fitaEntradaAtual;
-            novaFita = substitui(alunosEmMemoria, &tamEntrada, aluno);
+            novaFita = substitui(alunosEmMemoria, &tamEntrada, aluno, &analise);
         }
 
         if (novaFita) {
@@ -195,13 +204,35 @@ int getLastOppositeIndex(int currentFita) {
  * returns:  1 | 0
  */
 int isInFirstTape(int currentTape) {
-    return currentTape <= 9;
+    return currentTape < FF_POSFITAEXT;
 }
 
 Alunos getAlunoVazio() {
     Alunos aluno = (Alunos){-1};
     aluno.nota = (float)-1.0;
     return aluno;
+}
+
+void FF_exibirResultados(int quantidade, int opcional, FILE *arqvs[TOTALFITA], int fitaSaida) {
+    if (opcional) {
+        printf("\n\n\nRESULTADO: FITA %d \n", fitaSaida + 1);
+        imprimirFita(arqvs[fitaSaida], quantidade);
+    }
+
+    /**
+     * Tempo de execução em segundos
+     */
+
+    double tempoExecucao = ((double)analise.tempoFinal - analise.tempoInicial) / CLOCKS_PER_SEC;
+
+    printf("\n___________________________________");
+    printf("\n            Resultados             ");
+    printf("\n-----------------------------------");
+    printf("\n# Tempo  de Execucao: %lf seg  ", tempoExecucao);
+    printf("\n# Numero de Leituras: %d      ", analise.numLeitura);
+    printf("\n# Numero de Escritas: %d      ", analise.numEscrita);
+    printf("\n# Numero de Comparacoes: %lld   ", analise.numComparacoes);
+    printf("\n __________________________________");
 }
 
 void imprimirFita(FILE *arq, int tam) {

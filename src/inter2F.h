@@ -16,6 +16,7 @@ void intercalacao2F(int quantidade, int situacao, int opcional);
 void FF_geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], FILE *prova, int *vetTam, int quantidade);
 int FF_intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int fitaEntradaAtual, int fitaSaidaAtual, int tamEntrada, int countNiveis);
 int FF_inicializarMemoriaIntercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int fitaEntradaInicial);
+void FF_exibirResultados(int quantidade, int opcional, FILE *arqvs[TOTALFITA], int fitaSaida);
 void imprimirFitas(FILE *arqvs[TOTALFITA]);
 void imprimirFita(FILE *arq, int tam);
 void FF_preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int *vetTam);
