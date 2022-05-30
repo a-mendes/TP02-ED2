@@ -12,7 +12,7 @@ clock_t tempoExecucaoFim;
 /**
  * Funções usadas localmente
  */
-void quicksortExterno(FILE *arqLi, FILE *arqEi,	FILE *arqLEs, int esq, int dir);
+void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir);
 void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq, int dir, int *i, int *j);
 void escolherArquivoPorSituacao(int situacao, char* nomeArquivo);
 void exibirResultados(opcional);
@@ -129,15 +129,13 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq,
 		else
 			leInf(arqLi, &ultimoLido, &li, &ondeLer);
 		
-		//Modificar a comparação
-		if(ultimoLido.Chave > Lsup){
+		if(ultimoLido.nota > Lsup){
 			*j = es;
 			EscreveMax(arqLEs, ultimoLido, &es);
 			continue;
 		}
 
-		//Modificar a comparação
-		if(ultimoLido.Chave > Linf){
+		if(ultimoLido.nota > Linf){
 			*j = es;
 			EscreveMax(arqLEs, ultimoLido, &es);
 			continue;
@@ -148,16 +146,14 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq,
 			RetiraMin(&Area, &R, &NRArea);
 			EscreveMin(arqEi, R, &ei);
 			
-			//Modificar a atribuição
-			Linf = R.Chave;
+			Linf = R.nota;
 		}
 
 		else {
 			RetiraMax(&Area, &R, &NRArea);
 			EscreveMax(arqLEs, R, &es);
 			
-			//Modificar a atribuição
-			Linf = R.Chave;
+			Linf = R.nota;
 		}
 	}
 
@@ -169,7 +165,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq,
 
 
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
-	fseek(&arqLEs, (*ls - 1) * suseof(Alunos), SEEK_SET);
+	fseek(&arqLEs, (*ls - 1) * sizeof(Alunos), SEEK_SET);
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
 	ls--; 
 	*ondeLer = false;
@@ -182,12 +178,12 @@ void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
 }
 
 void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
-	insereItem(*ultimoLido, area);
+	insereItem(ultimoLido, area);
 	*NRArea = obterNumCelOcupadas(area);
 }
 
 void escreveMax(FILE **arqLEs, Alunos R, int *es){
-	fseek(*arqLEs, (*es - 1) * sizeof(ALunos), SEEK_SET);
+	fseek(*arqLEs, (*es - 1) * sizeof(Alunos), SEEK_SET);
 	fwrite(&R, sizeof(Alunos), 1, *arqLEs);
 	(*es)--;
 }
