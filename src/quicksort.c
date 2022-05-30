@@ -182,8 +182,46 @@ void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
 }
 
 void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
-	//InsereItem(*ultimoLido, area);
-	//*NRArea = obterNumCelOcupadas(area);
+	insereItem(*ultimoLido, area);
+	*NRArea = obterNumCelOcupadas(area);
+}
+
+void escreveMax(FILE **arqLEs, Alunos R, int *es){
+	fseek(*arqLEs, (*es - 1) * sizeof(ALunos), SEEK_SET);
+	fwrite(&R, sizeof(Alunos), 1, *arqLEs);
+	(*es)--;
+}
+
+void escreveMin(FILE **arqEi, Alunos R, int *ei){
+	fwrite(&R, sizeof(Alunos), 1, *arqEi);
+	(*ei)++;
+}
+
+void insereItem(Alunos *ultimoLido, TipoArea area){
+	//Implementar
+}
+
+void retiraMax(TipoArea *area, Alunos R, int *NRArea){
+	retiraUltimo(area, R);
+	*NRArea = obterNumCelulasOcupadas(area);
+}
+
+void retiraMin(TipoArea *area, Alunos R, int *NRArea){
+	retiraPrimeiro(area, R);
+	*NRArea = obterNumCelulasOcupadas(area);
+}
+
+void retiraUltimo(TipoArea *area, Alunos R){
+	//Implementar
+}
+
+void retiraPrimeiro(TipoArea *area, Alunos R){
+	//Implementar
+}
+
+int obterNumCelulasOcupadas(TipoArea *area){
+	//Implementar
+	return 0;
 }
 
 void escolherArquivoPorSituacao(int situacao, char* nomeArquivo){
@@ -197,7 +235,12 @@ void escolherArquivoPorSituacao(int situacao, char* nomeArquivo){
 	}
 }
 
-void exibirResultados(opcional){
+void exibirResultados(int opcional){
+	
+	if(opcional){
+		//Exibir registros
+	}
+
 	/**
 	 * Tempo de execução em segundos
 	 */
