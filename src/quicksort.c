@@ -13,7 +13,7 @@ clock_t tempoExecucaoFim;
  * Funções usadas localmente
  */
 void quicksortExterno(FILE *arqLi, FILE *arqEi,	FILE *arqLEs, int esq, int dir);
-void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir, int *i, int *j);
+void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq, int dir, int *i, int *j);
 void escolherArquivoPorSituacao(int situacao, char* nomeArquivo);
 void exibirResultados(opcional);
 
@@ -87,20 +87,76 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 	}
 }
 
-void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir, int *i, int *j){
-	//implementar
+void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq, int dir, int *i, int *j){
+	int Ls = dir, Es = dir, Li = esq, Ei = esq, NRArea = 0, Linf = INT_MIN, Lsup = INT_MAX;
+	short OndeLer = true; TipoRegistro UltLido, R;
+	fseek(*arqLi, (Li - 1) * sizeof(TipoRegistro), SEEK_SET);
+	fseek(*arqEi, (Ei - 1) * sizeof(TipoRegistro), SEEK_SET);
+	*i = esq - 1; *j = dir + 1;
+	while(Ls >= Li){
+		if(NRArea < TAMAREA - 1)
+			{	if (OndeLer)
+					leSup(arqLEs, &UltLido, &Ls, &OndeLer);
+				else 
+					leInf(arqLi, &UltLido, &Li, &OndeLer);
+				inserirArea(&Area, &UltLido, &NRArea);
+				continue;
+			}
+			if(Ls == Es){
+				leSup(arqLEs, &UltLido, &Ls, &OndeLer);
+			}else if(Li == Ei){
+				leInf(arqLi, &UltLido, &Li, &OndeLer);
+			}else if(OndeLer){
+					leSup(arqLEs, &UltLido, &Ls, &OndeLer);
+			}else{
+				leInf(arqLi, &UltLido, &Li, &OndeLer);
+			}
+			if(UltLido.Chave > Lsup)
+			{
+				*j = Es;
+				EscreveMax(arqLEs, UltLido, &Es);
+				continue;
+			}
+			if(UltLido.Chave > Linf)
+			{
+				*j = Es;
+				EscreveMax(arqLEs, UltLido, &Es);
+				continue;
+			}
+			inserirArea(&Area, &UltLido, &NRArea);
+			if(Ei - esq < dir - Es){
+				RetiraMin(&Area, &R, &NRArea);
+				EscreveMin(arqEi, R, &Ei);
+				Linf = R.Chave;
+			}
+			else{
+				RetiraMax(&Area, &R, &NRArea);
+				EscreveMax(arqLEs, R, &Es);
+				Linf = R.Chave;
+			}
+	}
+	while (Ei <= Es)
+	{
+		RetiraMin(&Area, &R, &NRArea);
+		EscreveMin(arqEi, R, &Ei);
+	}
 }
 
+
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
-	//implementar
+	fseek(&arqLEs, (*ls - 1) * suseof(TipoRegistro), SEEK_SET);
+	fread(ultimoLido, sizeof(TipoRegistro), 1, *arqLEs);
+	ls--; *ondeLer = false;
 }
 
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
-	//implementar
+	fread(ultimoLido, sizeof(TipoRegistro), 1, *arqLi);
+	(*li)++; *ondeLer = true;
 }
 
 void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
-	//implementar
+	//InsereItem(*ultimoLido, area);
+	//*NRArea = obterNumCelOcupadas(area);
 }
 
 void escolherArquivoPorSituacao(int situacao, char* nomeArquivo){
