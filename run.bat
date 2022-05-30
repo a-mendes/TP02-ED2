@@ -5,5 +5,4 @@ gcc -c ./utils/arquivo.c -o ./obj/arquivo.o
 gcc -c ./src/interF1.c -o ./obj/interF1.o
 gcc -c ./src/inter2F.c -o ./obj/inter2F.o
 gcc -c ./src/main.c -o ./obj/main.o
-gcc ./obj/main.o ./obj/interF1.o ./obj/inter2F.o ./obj/arquivo.o ./obj/heap.o -o jair.exe
-jair.exe
+gcc ./obj/main.o ./obj/interF1.o ./obj/inter2F.o ./obj/arquivo.o ./obj/heap.o -o ordena.exe
