@@ -88,70 +88,97 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 }
 
 void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq, int dir, int *i, int *j){
-	int Ls = dir, Es = dir, Li = esq, Ei = esq, NRArea = 0, Linf = INT_MIN, Lsup = INT_MAX;
-	short OndeLer = true; TipoRegistro UltLido, R;
-	fseek(*arqLi, (Li - 1) * sizeof(TipoRegistro), SEEK_SET);
-	fseek(*arqEi, (Ei - 1) * sizeof(TipoRegistro), SEEK_SET);
+	int ls = dir, es = dir, li = esq, ei = esq, NRArea = 0, Linf = INT_MIN, Lsup = INT_MAX;
+	short ondeLer = true; 
+	Alunos ultimoLido, R;
+	
+	fseek(*arqLi, (li - 1) * sizeof(Alunos), SEEK_SET);
+	fseek(*arqEi, (ei - 1) * sizeof(Alunos), SEEK_SET);
+	
 	*i = esq - 1; *j = dir + 1;
-	while(Ls >= Li){
-		if(NRArea < TAMAREA - 1)
-			{	if (OndeLer)
-					leSup(arqLEs, &UltLido, &Ls, &OndeLer);
-				else 
-					leInf(arqLi, &UltLido, &Li, &OndeLer);
-				inserirArea(&Area, &UltLido, &NRArea);
-				continue;
-			}
-			if(Ls == Es){
-				leSup(arqLEs, &UltLido, &Ls, &OndeLer);
-			}else if(Li == Ei){
-				leInf(arqLi, &UltLido, &Li, &OndeLer);
-			}else if(OndeLer){
-					leSup(arqLEs, &UltLido, &Ls, &OndeLer);
-			}else{
-				leInf(arqLi, &UltLido, &Li, &OndeLer);
-			}
-			if(UltLido.Chave > Lsup)
-			{
-				*j = Es;
-				EscreveMax(arqLEs, UltLido, &Es);
-				continue;
-			}
-			if(UltLido.Chave > Linf)
-			{
-				*j = Es;
-				EscreveMax(arqLEs, UltLido, &Es);
-				continue;
-			}
-			inserirArea(&Area, &UltLido, &NRArea);
-			if(Ei - esq < dir - Es){
-				RetiraMin(&Area, &R, &NRArea);
-				EscreveMin(arqEi, R, &Ei);
-				Linf = R.Chave;
-			}
-			else{
-				RetiraMax(&Area, &R, &NRArea);
-				EscreveMax(arqLEs, R, &Es);
-				Linf = R.Chave;
-			}
+	
+	/**
+	 * A partição é feita até que Li e Ls se cruzem
+	 */ 
+	while(ls >= li){
+
+		if(NRArea < TAM_MEMORIA_INTERNA - 1){	
+			if (ondeLer)
+				leSup(arqLEs, &ultimoLido, &ls, &ondeLer);
+			else 
+				leInf(arqLi, &ultimoLido, &li, &ondeLer);
+				
+			inserirArea(&Area, &ultimoLido, &NRArea);
+			continue;
+		}
+		
+		/**
+		 * Para garantir que os apontadores de escrita estejam atrás 
+		 * dos apontadores de leitura, a ordem alternada de leitura é 
+		 * interrompida se (Li = Ei) ou (Ls = Es).
+		 */
+		if(ls == es)
+			leSup(arqLEs, &ultimoLido, &ls, &ondeLer);
+		
+		else if(li == ei)
+			leInf(arqLi, &ultimoLido, &li, &ondeLer);
+		
+		else if(ondeLer)
+			leSup(arqLEs, &ultimoLido, &ls, &ondeLer);
+		
+		else
+			leInf(arqLi, &ultimoLido, &li, &ondeLer);
+		
+		//Modificar a comparação
+		if(ultimoLido.Chave > Lsup){
+			*j = es;
+			EscreveMax(arqLEs, ultimoLido, &es);
+			continue;
+		}
+
+		//Modificar a comparação
+		if(ultimoLido.Chave > Linf){
+			*j = es;
+			EscreveMax(arqLEs, ultimoLido, &es);
+			continue;
+		}
+		
+		inserirArea(&Area, &ultimoLido, &NRArea);
+		if(ei - esq < dir - es){
+			RetiraMin(&Area, &R, &NRArea);
+			EscreveMin(arqEi, R, &ei);
+			
+			//Modificar a atribuição
+			Linf = R.Chave;
+		}
+
+		else {
+			RetiraMax(&Area, &R, &NRArea);
+			EscreveMax(arqLEs, R, &es);
+			
+			//Modificar a atribuição
+			Linf = R.Chave;
+		}
 	}
-	while (Ei <= Es)
-	{
+
+	while (ei <= es){
 		RetiraMin(&Area, &R, &NRArea);
-		EscreveMin(arqEi, R, &Ei);
+		EscreveMin(arqEi, R, &ei);
 	}
 }
 
 
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
-	fseek(&arqLEs, (*ls - 1) * suseof(TipoRegistro), SEEK_SET);
-	fread(ultimoLido, sizeof(TipoRegistro), 1, *arqLEs);
-	ls--; *ondeLer = false;
+	fseek(&arqLEs, (*ls - 1) * suseof(Alunos), SEEK_SET);
+	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
+	ls--; 
+	*ondeLer = false;
 }
 
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
-	fread(ultimoLido, sizeof(TipoRegistro), 1, *arqLi);
-	(*li)++; *ondeLer = true;
+	fread(ultimoLido, sizeof(Alunos), 1, *arqLi);
+	(*li)++; 
+	*ondeLer = true;
 }
 
 void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
