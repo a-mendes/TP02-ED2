@@ -137,7 +137,8 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 	fseek(*arqLi, (li - 1) * sizeof(Alunos), SEEK_SET);
 	fseek(*arqEi, (ei - 1) * sizeof(Alunos), SEEK_SET);
 	
-	*i = esq - 1; *j = dir + 1;
+	*i = esq - 1; 
+	*j = dir + 1;
 	
 	/**
 	 * A partição é feita até que Li e Ls se cruzem
@@ -217,7 +218,6 @@ void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
 	printf("\nultimoLido lesup %ld \t%.2f \t%s \t%s \t%s", 
 		 ultimoLido->inscricao, ultimoLido->nota, ultimoLido->estado, ultimoLido->cidade, ultimoLido->curso);
 
-	
 	numLeituraQuick++;
 }
 
@@ -228,7 +228,6 @@ void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
 
 	printf("\nultimoLido leinf%ld \t%.2f \t%s \t%s \t%s", 
 		 ultimoLido->inscricao, ultimoLido->nota, ultimoLido->estado, ultimoLido->cidade, ultimoLido->curso);
-
 
 	numLeituraQuick++;
 }
