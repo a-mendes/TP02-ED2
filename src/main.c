@@ -1,6 +1,6 @@
 #include "inter2F.h"
 #include "interF1.h"
-#include "quicksort.h"
+// #include "quicksort.h"
 
 // ordena <método> <quantidade> <situação> [-P]
 
@@ -43,7 +43,7 @@ int main(int argc, char const *argv[]) {
             break;
 
         case 3:
-            quicksort(quantidade, situacao, opcional);
+            // quicksort(quantidade, situacao, opcional);
             break;
 
         default:  // opção inválida

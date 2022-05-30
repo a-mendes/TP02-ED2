@@ -23,7 +23,7 @@ int intercalacaoF1(int quantidade, int situacao, int opcional) {
 
     switch (situacao) {
         case 1:
-            //prova = fopen("./data/ProvaoAscendente.dat", "rb");
+            prova = fopen("./data/ProvaoAscendente.dat", "rb");
             break;
         case 2:
             //prova = fopen("./data/ProvaoDescendente.dat", "rb");
@@ -50,7 +50,7 @@ int intercalacaoF1(int quantidade, int situacao, int opcional) {
     geraBlocos(arqvs, alunosEmMemoria, prova, &vetTam, quantidade);
 
     while(intercalacao(arqvs, alunosEmMemoria, &vetTam)) { 
-        redistribuicao(arqvs, nomes);
+        redistribuicao(arqvs, nomes, &vetTam);
     }
 
     if(opcional)
@@ -64,7 +64,7 @@ int intercalacaoF1(int quantidade, int situacao, int opcional) {
 
 void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], FILE *prova, int *vetTam, int quantidade) {
     int numfita = 0;
-    int cont = 17;
+    int cont = 17, segundoBloco = 0;
     Alunos alunoNulo;
     alunoNulo.nota = -1;
 
@@ -83,38 +83,45 @@ void geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], F
             numfita += 1;
         }
 
-        if (numfita >= TAMFITAINT)
+        if (numfita >= TAMFITAINT) {
             numfita = 0;
-    }
-
-    *vetTam = numfita + 1;
-
-    Alunos teste; ///////////////////////////////// PARA TESTE // APAGAR
-    cont = 0;
-    for (int i = 0; i < 19; i++) {
-        rewind(arqvs[i]);
-        printf("FITA %d \n", i + 1);
-        while (fread(&teste, sizeof(Alunos), 1, arqvs[i])) {
-            printf("%d -", cont++);
-            printf("%ld ", teste.inscricao);
-            printf("%.2f ", teste.nota);
-            printf("%s ", teste.estado);
-            printf("%s ", teste.cidade);
-            printf("%s \n", teste.curso);
+            segundoBloco = 1;
         }
-        printf("\n\n\n");
     }
+
+    *vetTam = segundoBloco;
+
+    // Alunos teste; ///////////////////////////////// PARA TESTE // APAGAR
+    // cont = 0;
+    // for (int i = 0; i < 19; i++) {
+    //     rewind(arqvs[i]);
+    //     printf("FITA BLOCO %d \n", i + 1);
+    //     while (fread(&teste, sizeof(Alunos), 1, arqvs[i])) {
+    //         printf("%d -", cont++);
+    //         printf("%ld ", teste.inscricao);
+    //         printf("%.2f ", teste.nota);
+    //         printf("%s ", teste.estado);
+    //         printf("%s ", teste.cidade);
+    //         printf("%s \n", teste.curso);
+    //     }
+    //     printf("\n\n\n");
+    // }
 }
 
 int intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], int *vetTam) {
-    int blocosFitaExt = 0;
+    int blocosFitaSaida = 0;
     Alunos aluno;
     Alunos alunoNulo;
     alunoNulo.nota = -1;
+    int segundoBloco = *vetTam;
+
+    for(int i = 0; i < TOTALFITA; i++) {
+        rewind(arqvs[i]);
+    }
 
     preencheVetorAlunos(arqvs, alunosEmMemoria, vetTam);
 
-    while (*vetTam > 0) {
+    while(*vetTam > 0) {
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
 
         if (!fread(&aluno, sizeof(Alunos), 1, arqvs[alunosEmMemoria[0].posFita]))
@@ -126,96 +133,84 @@ int intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], 
             substitui(alunosEmMemoria, vetTam, aluno);
 
         if (*vetTam == 0) {
-            blocosFitaExt++;
-            fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
+            blocosFitaSaida++;
+            if(segundoBloco)
+                fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
             preencheVetorAlunos(arqvs, alunosEmMemoria, vetTam);
         }
     }
 
-    if(blocosFitaExt > 1)
-        return 1;
-    
-    return 0;
-}
-
-void redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA]) {
-    // Reseta os arquivos
-    for (int i = 0; i < 19; i++) {
-        arqvs[i] = freopen(nomes[i], "wb", arqvs[i]);
-    }
-    for(int i = 0; i < TOTALFITA; i++ ) {
-        rewind(arqvs[i]);
-    }
-
-    Alunos aux;  // Aluno auxiliar para ler os arquivos
-
-    printf("REDISTRIBUICAO\n\n\n\n");
-
-    int contador = 0;
-    while (fread(&aux, sizeof(Alunos), 1, arqvs[POSFITAEXT])) {  // le o ultimo arquivo
-
-        if (aux.nota == -1) {  // se for -1, passa pra proxima fita
-            fwrite(&aux, sizeof(Alunos), 1, arqvs[contador++]);
-            fread(&aux, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
-            if (contador == 19) {
-                contador = 0;
-            }
-        }
-        fwrite(&aux, sizeof(Alunos), 1, arqvs[contador]);     // escreve no arquivo correto
-    }
-
-    //rewind para o inicio dos arquivos
-    for (int i = 0; i < TOTALFITA; i++) {
-        rewind(arqvs[i]);
-    }
-
-
-    Alunos teste; ///////////////////////////////// PARA TESTE // APAGAR
-    int cont = 0;
-    for (int i = 0; i < 19; i++) {
-        rewind(arqvs[i]);
-        printf("FITA %d \n", i + 1);
-        while (fread(&teste, sizeof(Alunos), 1, arqvs[i])) {
-            printf("%d -", cont++);
-            printf("%ld ", teste.inscricao);
-            printf("%.2f ", teste.nota);
-            printf("%s ", teste.estado);
-            printf("%s ", teste.cidade);
-            printf("%s \n", teste.curso);
-        }
-        printf("\n\n\n");
-    }
-    printf("\n\n\n");
-
+    return blocosFitaSaida > 1 ? 1 : 0;
 }
 
 
 void preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], int *vetTam) {
-    Alunos aluno;
-    if (*vetTam != 0) {
-        for (int i = 0; i <= *vetTam; i++) {
-            rewind(arqvs[i]);
-            fread(&alunosEmMemoria[i].aluno, sizeof(Alunos), 1, arqvs[i]);
-            alunosEmMemoria[i].posFita = i;
-            alunosEmMemoria[i].maior = false;
-        }
-    } else {
-        for (int j = 0, i = 0; i < TAMFITAINT; i++) {
-            if (fread(&alunosEmMemoria[j].aluno, sizeof(Alunos), 1, arqvs[i])) {
-                alunosEmMemoria[j].aluno = aluno;
-                alunosEmMemoria[j].posFita = i;
-                alunosEmMemoria[j++].maior = false;
-                *vetTam += 1;
-            }
+    *vetTam = 0;
+    
+    for (int j = 0, i = 0; i < TAMFITAINT; i++) {
+        if (fread(&alunosEmMemoria[j].aluno, sizeof(Alunos), 1, arqvs[i])) {
+            alunosEmMemoria[j].posFita = i;
+            alunosEmMemoria[j++].maior = false;
+            *vetTam += 1;
         }
     }
-
     HEAP_CONSTROI(alunosEmMemoria, *vetTam);
 }
 
+
+void redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA], int *vetTam) {
+    Alunos aux;
+    int cont = 0;
+    *vetTam = 0;
+
+    for(int i = 0; i < TAMFITAINT; i++) {
+        arqvs[i] = freopen(nomes[i], "wb", arqvs[i]);
+        arqvs[i] = freopen(nomes[i], "wb+", arqvs[i]);
+    }
+    rewind(arqvs[POSFITAEXT]);
+
+    while(fread(&aux, sizeof(Alunos), 1, arqvs[POSFITAEXT])) {
+
+        if(aux.nota != -1)
+            fwrite(&aux, sizeof(Alunos), 1, arqvs[cont]);
+        else {
+            fwrite(&aux, sizeof(Alunos), 1, arqvs[cont++]);
+            if(cont == TAMFITAINT) {
+                cont = 0;
+                *vetTam = 1;
+            }
+        }
+    }
+    
+    arqvs[POSFITAEXT] = freopen(nomes[POSFITAEXT], "wb", arqvs[POSFITAEXT]);
+    arqvs[POSFITAEXT] = freopen(nomes[POSFITAEXT], "wb+", arqvs[POSFITAEXT]);
+
+
+    //rewind para o inicio dos arquivos se FOR PRINTAR
+    // for (int i = 0; i < TOTALFITA; i++) {
+    //     rewind(arqvs[i]);
+    // }
+
+    // cont = 0;
+    // for (int i = 0; i < 19; i++) {
+    //     printf("FITA REDIST %d \n", i + 1);
+    //     while (fread(&aux, sizeof(Alunos), 1, arqvs[i])) {
+    //         printf("%d -", cont++);
+    //         printf("%ld ", aux.inscricao);
+    //         printf("%.2f ", aux.nota);
+    //         printf("%s ", aux.estado);
+    //         printf("%s ", aux.cidade);
+    //         printf("%s \n", aux.curso);
+    //     }
+    //     printf("\n\n\n");
+    // }
+    // printf("\n\n\n");
+}
+
+
 void imprimeFitaSaida(FILE *arqvs[TOTALFITA]) {
     Alunos aluno;
-    int cont = 0;
+    int cont = 1;
     rewind(arqvs[POSFITAEXT]);
     printf("\n\nFITA DE SAIDA\n");
 
