@@ -212,22 +212,24 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
 	fseek(*arqLEs, (*ls - 1) * sizeof(Alunos), SEEK_SET);
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
-	(*ls)--; 
-	*ondeLer = false;
 
-	printf("\nultimoLido lesup %ld \t%.2f \t%s \t%s \t%s", 
-		 ultimoLido->inscricao, ultimoLido->nota, ultimoLido->estado, ultimoLido->cidade, ultimoLido->curso);
+	//printf("\nLs: %d", *ls);
+
+	(*ls)--; 
+
+	*ondeLer = false;
 
 	numLeituraQuick++;
 }
 
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLi);
-	(*li)++; 
-	*ondeLer = true;
 
-	printf("\nultimoLido leinf%ld \t%.2f \t%s \t%s \t%s", 
-		 ultimoLido->inscricao, ultimoLido->nota, ultimoLido->estado, ultimoLido->cidade, ultimoLido->curso);
+
+	//printf("\nLi: %d", *li);
+	(*li)++; 
+
+	*ondeLer = true;
 
 	numLeituraQuick++;
 }
@@ -261,13 +263,7 @@ void insereItem(Alunos *ultimoLido, TipoArea *area){
 	/**
 	 * Copia as informações do ultimo lido para a primeira celula desocupada da área
 	 */
-	 //printf("\nultimoLido %ld \t%.2f \t%s \t%s \t%s", 
-	//	 ultimoLido->inscricao, ultimoLido->nota, ultimoLido->estado, ultimoLido->cidade, ultimoLido->curso);
-  
 	copiarAluno(area[i], *ultimoLido);
-	printf("\ninserido %ld \t%.2f \t%s \t%s \t%s", 
-		 area[i]->inscricao, area[i]->nota, area[i]->estado, area[i]->cidade, area[i]->curso);
-
 
 	ordenaArea(area);
 }
@@ -312,7 +308,6 @@ void retiraPrimeiro(TipoArea *area, Alunos *R){
 	/**
 	 * Reordenando
 	 */ 
-
 	ordenaArea(area);
 }
 
@@ -360,15 +355,17 @@ void ordenaArea(TipoArea *area){
 			int j = i;
 			
 			while(area[j-h]->nota > aux->nota){
-				area[j]->nota = area[j-h]->nota;
+				area[j] = area[j-h];
 				j = j - h;
 				
 				if(j < h)
 					break;
 			}
-			area[j]->nota = aux->nota;
+			area[j] = aux;
 		}
 	} while (h != 1);
+
+	//exibeArea(area);
 }
 
 int obterNumCelulasOcupadas(TipoArea *area){
@@ -415,8 +412,8 @@ void exibirResultadosQuick(int opcional, char *nomeArquivo, int quantidade){
 			Alunos atual;
 			fread(&atual, sizeof(Alunos), 1, arq);
 
-			printf("\n%d) %ld \t%.2f \t%s \t%s \t%s", 
-				i, atual.inscricao, atual.nota, atual.estado, atual.cidade, atual.curso);
+			printf("\n%d) %ld \t%.2f \t%s \t%s \t\t\t%s", 
+				i+1, atual.inscricao, atual.nota, atual.estado, atual.cidade, atual.curso);
 		}
 
 		fclose(arq);
