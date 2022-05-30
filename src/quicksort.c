@@ -13,7 +13,7 @@ clock_t tempoExecucaoFimQuick;
  * Funções usadas localmente
  */
 void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir);
-void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea Area, int esq, int dir, int *i, int *j);
+void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq, int dir, int *i, int *j);
 
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer);
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer);
@@ -29,7 +29,7 @@ void retiraMin(TipoArea *area, Alunos *R, int *NRArea);
 void retiraUltimo(TipoArea *area, Alunos *R);
 void retiraPrimeiro(TipoArea *area, Alunos *R);
 
-void criaAreaVazia(TipoArea *area);
+TipoArea* criaAreaVazia(TipoArea *area);
 int obterNumCelulasOcupadas(TipoArea *area);
 void ordenaArea(TipoArea *area);
 void exibeArea(TipoArea *area);
@@ -89,7 +89,7 @@ void quicksort(int quantidade, int situacao, int opcional){
 }
 
 void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir){
-	TipoArea area;
+	TipoArea *area;
 	int i, j;
 
 	printf("\nTESTE: quicksortExterno");
@@ -105,8 +105,7 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 	/**
 	 * Malloca área e define todas as células com valores inválidos
 	 */
-	criaAreaVazia(&area);
-	exibeArea(&area);
+	area = criaAreaVazia(area);
 
 	/**
 	 * Define subarquivos
@@ -129,10 +128,10 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 	/**
 	 * Desaloca área
 	 */ 
-	free(&area);
+	free(area);
 }
 
-void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq, int dir, int *i, int *j){
+void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq, int dir, int *i, int *j){
 	printf("\nTESTE: particao");
 
 	int ls = dir, es = dir, li = esq, ei = esq, NRArea = 0, Linf = INT_MIN, Lsup = INT_MAX;
@@ -155,7 +154,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 			else 
 				leInf(arqLi, &ultimoLido, &li, &ondeLer);
 				
-			inserirArea(&area, &ultimoLido, &NRArea);
+			inserirArea(area, &ultimoLido, &NRArea);
 			continue;
 		}
 		
@@ -188,16 +187,16 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 			continue;
 		}
 		
-		inserirArea(&area, &ultimoLido, &NRArea);
+		inserirArea(area, &ultimoLido, &NRArea);
 		if(ei - esq < dir - es){
-			retiraMin(&area, &R, &NRArea);
+			retiraMin(area, &R, &NRArea);
 			escreveMin(arqEi, R, &ei);
 			
 			Linf = R.nota;
 		}
 
 		else {
-			retiraMax(&area, &R, &NRArea);
+			retiraMax(area, &R, &NRArea);
 			escreveMax(arqLEs, R, &es);
 			
 			Linf = R.nota;
@@ -205,7 +204,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 	}
 
 	while (ei <= es){
-		retiraMin(&area, &R, &NRArea);
+		retiraMin(area, &R, &NRArea);
 		escreveMin(arqEi, R, &ei);
 	}
 }
@@ -320,7 +319,7 @@ void retiraPrimeiro(TipoArea *area, Alunos *R){
 	ordenaArea(area);
 }
 
-void criaAreaVazia(TipoArea *area){
+TipoArea* criaAreaVazia(TipoArea *area){
 	printf("\nTESTE: criaAreaVazia");
 	area = malloc(sizeof(TipoArea) * TAM_MEMORIA_INTERNA);
 	for (int i = 0; i < TAM_MEMORIA_INTERNA; i++){
@@ -330,6 +329,9 @@ void criaAreaVazia(TipoArea *area){
 
 		area[i] = aluno;
 	}
+
+	return area;
+	//exibeArea(area);
 }
 
 void exibeArea(TipoArea *area){
@@ -378,12 +380,17 @@ void ordenaArea(TipoArea *area){
 int obterNumCelulasOcupadas(TipoArea *area){
 	printf("\nTESTE: obterNumCelulasOcupadas");
 
+	exibeArea(area);
+
 	int contador = 0;
 	for (int i = 0; i < TAM_MEMORIA_INTERNA; i++){
+		printf("\n\ti: %d", i);
 		printf("\n\tinscricao: %ld", area[i]->inscricao);
 
 		if(area[i]->inscricao != -1)
 			contador++;
+
+		printf("\n\tcontador: %d", contador);
 	}
 
 	return contador;
