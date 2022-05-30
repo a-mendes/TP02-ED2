@@ -355,6 +355,7 @@ void ordenaArea(TipoArea *area){
 			int j = i;
 			
 			while(area[j-h]->nota > aux->nota){
+				numComparacoesQuick++;
 				area[j] = area[j-h];
 				j = j - h;
 				
