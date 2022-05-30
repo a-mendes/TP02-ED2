@@ -37,3 +37,20 @@ void trocarArquivos(FILE *arqvs[TOTALFITA], int a, int b) {
     arqvs[a] = arqvs[b];
     arqvs[b] = aux;
 }
+
+FILE *escolherArquivoPorSituacao(int situacao) {
+    switch (situacao) {
+        case 1:
+            return fopen("./data/ProvaoAscendente.dat", "rb");
+
+        case 2:
+            return fopen("./data/ProvaoDescendente.dat", "rb");
+
+        case 3:
+            return fopen("./data/ProvaoAleatorio.dat", "rb");
+
+        default:
+            printf("Opcao invalida.");
+            exit(EXIT_FAILURE);
+    }
+}

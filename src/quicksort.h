@@ -20,7 +20,7 @@
 #define TAM_MEMORIA_INTERNA 10
 #define TAM_TOTAL_REGISTROS 471705
 
-typedef Alunos TipoArea;
+typedef Alunos* TipoArea;
 
 void quicksort(int quantidade, int situacao, int opcional);
 

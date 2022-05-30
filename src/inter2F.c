@@ -12,31 +12,19 @@ void FF_imprime(Estrutura *v, int tam) {
 }
 
 void intercalacao2F(int quantidade, int situacao, int opcional) {
-    FILE *prova;
-    char nomes[TOTALFITA][TOTALFITA] = {""};   // Vetor de nomes para criar as fitas
-    FILE *arqvs[TOTALFITA];                    // Apontador para as fitas
-    Estrutura alunosEmMemoria[FF_TAMFITAINT];  // voltat intam;
-    int vetTam = 0;                            // Estrutura que guarda os alunos em memória
-
-    switch (situacao) {
-        case 1:
-            // prova = fopen("./data/ProvaoAscendente.dat", "rb");
-            break;
-        case 2:
-            // prova = fopen("./data/ProvaoDescendente.dat", "rb");
-            break;
-        case 3:
-            prova = fopen("./data/ProvaoAleatorio.dat", "rb");
-            break;
-
-        default:
-            printf("Tu é um animal que não sabe contar\n");
-            break;
+    FILE *prova = escolherArquivoPorSituacao(situacao);
+    if (opcional) {
+        printf("Arquivo a ser ordenado: \n");
+        imprimirFita(prova, quantidade);
     }
-
+    char nomes[TOTALFITA][TOTALFITA] = {""};  // Vetor de nomes para criar as fitas
     nomeiaArquivo(nomes);
+
+    FILE *arqvs[TOTALFITA];  // Apontador para as fitas
     criaArquivo(arqvs, nomes);
 
+    int vetTam = 0;  // Estrutura que guarda os alunos em memória
+    Estrutura alunosEmMemoria[FF_TAMFITAINT];
     for (int i = 0; i < FF_TAMFITAINT; i++) {
         alunosEmMemoria[i].aluno = readFile(prova);
         alunosEmMemoria[i].maior = false;
@@ -48,39 +36,20 @@ void intercalacao2F(int quantidade, int situacao, int opcional) {
     int tamEntrada = FF_inicializarMemoriaIntercalacao(arqvs, alunosEmMemoria, 0);
     int fitaSaida = FF_intercalacao(arqvs, alunosEmMemoria, 0, FF_POSFITAEXT, tamEntrada, 1);
 
-    printf("FITA %d \n", fitaSaida);
-    Alunos teste;
-    int cont = 1;
-    rewind(arqvs[fitaSaida]);
-    while (fread(&teste, sizeof(Alunos), 1, arqvs[fitaSaida]) && teste.nota != -1) {
-        printf("%d - ", cont++);
-        printf("%ld ", teste.inscricao);
-        printf("%.2f ", teste.nota);
-        printf("%s ", teste.estado);
-        printf("%s ", teste.cidade);
-        printf("%s \n", teste.curso);
+    if (opcional) {
+        printf("\n\n\nRESULTADO: FITA %d \n", fitaSaida);
+        imprimirFita(arqvs[fitaSaida], quantidade);
     }
-    // Alunos teste;
-    // int cont = 0;
-    // for (int i = 0; i < 19; i++) {
-    //     rewind(arqvs[i]);
-    //     printf("FITA %d \n", i + 1);
-    //     while (fread(&teste, sizeof(Alunos), 1, arqvs[i])) {
-    //         if (teste.nota != -1) {
-    //             printf("%d - ", cont++);
-    //             printf("%ld ", teste.inscricao);
-    //             printf("%.2f ", teste.nota);
-    //             printf("%s ", teste.estado);
-    //             printf("%s ", teste.cidade);
-    //             printf("%s \n", teste.curso);
-    //         }
-    //     }
-    //     printf("\n\n\n");
-    //     rewind(arqvs[i]);
-    // }
 
     fechaArq(arqvs);
     fclose(prova);
+}
+
+void esvaziarHeap(Estrutura alunosEmMemoria[FF_TAMFITAINT]) {
+    Alunos alunoNulo = getAlunoVazio();
+    for (int i = 0; i < 10; i++) {
+        alunosEmMemoria[i].aluno = alunoNulo;
+    }
 }
 
 void FF_geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], FILE *prova, int *vetTam, int quantidade) {
@@ -107,28 +76,11 @@ void FF_geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAI
             numfita = 0;
         count++;
     }
-    printf("%d", count);
     *vetTam = numfita + 1;
-    for (int i = 0; i < 10; i++) {
-        alunosEmMemoria[i].aluno = alunoNulo;
-    }
-    Alunos teste;
-    int cont = 0;
-    for (int i = 0; i < 19; i++) {
+    esvaziarHeap(alunosEmMemoria);
+
+    for (int i = 0; i < TOTALFITA; i++) {
         rewind(arqvs[i]);
-        printf("FITA %d \n", i + 1);
-        // while (fread(&teste, sizeof(Alunos), 1, arqvs[i])) {
-        //     if (teste.nota != -1) {
-        //         printf("%d - ", cont++);
-        //         printf("%ld ", teste.inscricao);
-        //         printf("%.2f ", teste.nota);
-        //         printf("%s ", teste.estado);
-        //         printf("%s ", teste.cidade);
-        //         printf("%s \n", teste.curso);
-        //     }
-        // }
-        // printf("\n\n\n");
-        // rewind(arqvs[i]);
     }
 }
 /*
@@ -250,6 +202,23 @@ Alunos getAlunoVazio() {
     Alunos aluno = (Alunos){-1};
     aluno.nota = (float)-1.0;
     return aluno;
+}
+
+void imprimirFita(FILE *arq, int tam) {
+    Alunos teste;
+    int cont = 0;
+    rewind(arq);
+    while (fread(&teste, sizeof(Alunos), 1, arq) && tam--) {
+        if (teste.nota != -1) {
+            printf("%d - ", cont++);
+            printf("%ld ", teste.inscricao);
+            printf("%.2f ", teste.nota);
+            printf("%s ", teste.estado);
+            printf("%s ", teste.cidade);
+            printf("%s \n", teste.curso);
+        }
+    }
+    rewind(arq);
 }
 
 void imprimirFitas(FILE *arqvs[TOTALFITA]) {

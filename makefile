@@ -33,6 +33,5 @@ go:
 
 clean:
 	@del *.exe /q
-	@cd data && del *.dat /q && \
-	@cd ../obj && del *.o /q && \
+	@cd ./obj && del *.o /q && \
 	@cls
