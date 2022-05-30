@@ -1,5 +1,6 @@
 #include "inter2F.h"
 #include "interF1.h"
+#include "quicksort.h"
 
 // ordena <método> <quantidade> <situação> [-P]
 
@@ -27,13 +28,22 @@ int main(int argc, char const *argv[]) {
         }
     }
 
-    // Implementar menu de acesso às pesquisas
+    /**
+     * Implementar aqui chamadas para geração de arquivos ordenados
+     * ascendentemente e descendentemente
+     */
+
+    // Menu de acesso às pesquisas
     switch (metodo) {
         case 1:
             intercalacao2F(quantidade, situacao, opcional);
             break;
         case 2:
             intercalacaoF1(quantidade, situacao, opcional);
+            break;
+
+        case 3:
+            quicksort(quantidade, situacao, opcional);
             break;
 
         default:  // opção inválida
