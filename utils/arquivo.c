@@ -31,3 +31,9 @@ Alunos readFile(FILE *prova) {
 
     return aluno;
 }
+
+void trocarArquivos(FILE *arqvs[TOTALFITA], int a, int b) {
+    FILE *aux = arqvs[a];
+    arqvs[a] = arqvs[b];
+    arqvs[b] = aux;
+}

@@ -26,5 +26,6 @@ void fechaArq(FILE *arqvs[TOTALFITA]);
 void nomeiaArquivo(char nomes[TOTALFITA][TOTALFITA]);
 void criaArquivo(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA]);
 Alunos readFile(FILE *prova);
+void trocarArquivos(FILE *arqvs[TOTALFITA], int a, int b);
 
 #endif
