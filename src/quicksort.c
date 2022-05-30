@@ -92,7 +92,7 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 	TipoArea *area;
 	int i, j;
 
-	printf("\nTESTE: quicksortExterno");
+	//printf("\nTESTE: quicksortExterno");
 
 	/**
 	 * Se o indice da direita for menor ou igual ao indice da esquerda,
@@ -132,7 +132,7 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 }
 
 void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq, int dir, int *i, int *j){
-	printf("\nTESTE: particao");
+	//printf("\nTESTE: particao");
 
 	int ls = dir, es = dir, li = esq, ei = esq, NRArea = 0, Linf = INT_MIN, Lsup = INT_MAX;
 	short ondeLer = true; 
@@ -146,7 +146,10 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 	/**
 	 * A partição é feita até que Li e Ls se cruzem
 	 */ 
+	int counterIter = 0;
 	while(ls >= li){
+		printf("\nCounter: %d", counterIter);
+		counterIter++;
 
 		if(NRArea < TAM_MEMORIA_INTERNA - 1){	
 			if (ondeLer)
@@ -175,19 +178,21 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 		else
 			leInf(arqLi, &ultimoLido, &li, &ondeLer);
 		
+		printf("\nUltimoLido.nota: %.2f", ultimoLido.nota);
 		if(ultimoLido.nota > Lsup){
 			*j = es;
 			escreveMax(arqLEs, ultimoLido, &es);
 			continue;
 		}
 
-		if(ultimoLido.nota > Linf){
-			*j = es;
-			escreveMax(arqLEs, ultimoLido, &es);
+		if(ultimoLido.nota < Linf){
+			*i = ei;
+			escreveMin(arqEi, ultimoLido, &ei);
 			continue;
 		}
 		
 		inserirArea(area, &ultimoLido, &NRArea);
+		
 		if(ei - esq < dir - es){
 			retiraMin(area, &R, &NRArea);
 			escreveMin(arqEi, R, &ei);
@@ -199,7 +204,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 			retiraMax(area, &R, &NRArea);
 			escreveMax(arqLEs, R, &es);
 			
-			Linf = R.nota;
+			Lsup = R.nota;
 		}
 	}
 
@@ -211,29 +216,29 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq
 
 
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
-	printf("\nTESTE: leSup");
+	//printf("\nTESTE: leSup");
 	fseek(*arqLEs, (*ls - 1) * sizeof(Alunos), SEEK_SET);
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
-	ls--; 
+	(*ls)--; 
 	*ondeLer = false;
 }
 
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
-	printf("\nTESTE: leInf");
+	//printf("\nTESTE: leInf");
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLi);
 	(*li)++; 
 	*ondeLer = true;
 }
 
 void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
-	printf("\nTESTE: inserirArea");
+	//printf("\nTESTE: inserirArea");
 
 	insereItem(ultimoLido, area);
 	*NRArea = obterNumCelulasOcupadas(area);
 }
 
 void escreveMax(FILE **arqLEs, Alunos R, int *es){
-	printf("\nTESTE: escreveMax");
+	//printf("\nTESTE: escreveMax");
 
 	fseek(*arqLEs, (*es - 1) * sizeof(Alunos), SEEK_SET);
 	fwrite(&R, sizeof(Alunos), 1, *arqLEs);
@@ -241,22 +246,22 @@ void escreveMax(FILE **arqLEs, Alunos R, int *es){
 }
 
 void escreveMin(FILE **arqEi, Alunos R, int *ei){
-	printf("\nTESTE: escreveMin");
+	//printf("\nTESTE: escreveMin");
 
 	fwrite(&R, sizeof(Alunos), 1, *arqEi);
 	(*ei)++;
 }
 
 void insereItem(Alunos *ultimoLido, TipoArea *area){
-	printf("\nTESTE: insereItem");
+	//printf("\nTESTE: insereItem");
 
 	/**
 	 * Variável i representa o indice da primeira celula desocupada da área
 	 */ 
 	int i = obterNumCelulasOcupadas(area);
 
-	printf("\n\tprimeira celula desocupada da área: %d", i);
-	printf("\n\tinscricao origem: %ld", ultimoLido->inscricao);
+	//printf("\n\tprimeira celula desocupada da área: %d", i);
+	//printf("\n\tinscricao origem: %ld", ultimoLido->inscricao);
 
 	
 	/**
@@ -268,21 +273,21 @@ void insereItem(Alunos *ultimoLido, TipoArea *area){
 }
 
 void retiraMax(TipoArea *area, Alunos *R, int *NRArea){
-	printf("\nTESTE: retiraMax");
+	//printf("\nTESTE: retiraMax");
 
 	retiraUltimo(area, R);
 	*NRArea = obterNumCelulasOcupadas(area);
 }
 
 void retiraMin(TipoArea *area, Alunos *R, int *NRArea){
-	printf("\nTESTE: retiraMin");
+	//printf("\nTESTE: retiraMin");
 
 	retiraPrimeiro(area, R);
 	*NRArea = obterNumCelulasOcupadas(area);
 }
 
 void retiraUltimo(TipoArea *area, Alunos *R){
-	printf("\nTESTE: retiraUltimo");
+	//printf("\nTESTE: retiraUltimo");
 
 	/**
 	 * Variável i representa o indice da última célula da área
@@ -298,7 +303,7 @@ void retiraUltimo(TipoArea *area, Alunos *R){
 }
 
 void retiraPrimeiro(TipoArea *area, Alunos *R){
-	printf("\nTESTE: retiraPrimeiro");
+	//printf("\nTESTE: retiraPrimeiro");
 
 	/**
 	 * Variável i representa o primeiro indice da área
@@ -320,7 +325,7 @@ void retiraPrimeiro(TipoArea *area, Alunos *R){
 }
 
 TipoArea* criaAreaVazia(TipoArea *area){
-	printf("\nTESTE: criaAreaVazia");
+	//printf("\nTESTE: criaAreaVazia");
 	area = malloc(sizeof(TipoArea) * TAM_MEMORIA_INTERNA);
 	for (int i = 0; i < TAM_MEMORIA_INTERNA; i++){
 		Alunos *aluno = malloc(sizeof(Alunos));
@@ -348,7 +353,7 @@ void exibeArea(TipoArea *area){
 }
 
 void ordenaArea(TipoArea *area){
-	printf("\nTESTE: ordenaArea");
+	//printf("\nTESTE: ordenaArea");
 	/**
 	 * O método Shell Sort foi escohido para a ordenação da área
 	 * pois sua implementação independe de recursão
@@ -378,27 +383,27 @@ void ordenaArea(TipoArea *area){
 }
 
 int obterNumCelulasOcupadas(TipoArea *area){
-	printf("\nTESTE: obterNumCelulasOcupadas");
+	//printf("\nTESTE: obterNumCelulasOcupadas");
 
-	exibeArea(area);
+	//exibeArea(area);
 
 	int contador = 0;
 	for (int i = 0; i < TAM_MEMORIA_INTERNA; i++){
-		printf("\n\ti: %d", i);
-		printf("\n\tinscricao: %ld", area[i]->inscricao);
+		//printf("\n\ti: %d", i);
+		//printf("\n\tinscricao: %ld", area[i]->inscricao);
 
 		if(area[i]->inscricao != -1)
 			contador++;
 
-		printf("\n\tcontador: %d", contador);
+		//printf("\n\tcontador: %d", contador);
 	}
 
 	return contador;
 }
 
 void copiarAluno(Alunos *destino, Alunos origem){
-	printf("\nTESTE: copiarAluno");
-	printf("\n\t inscricao origem: %ld", origem.inscricao);
+	//printf("\nTESTE: copiarAluno");
+	//printf("\n\t inscricao origem: %ld", origem.inscricao);
 
 	destino->inscricao = origem.inscricao;
 	destino->nota = origem.nota;
@@ -406,7 +411,7 @@ void copiarAluno(Alunos *destino, Alunos origem){
 	strcpy(destino->cidade, origem.cidade);
 	strcpy(destino->curso, origem.curso);
 
-	printf("\n\t inscricao destino: %ld", destino->inscricao);
+	//printf("\n\t inscricao destino: %ld", destino->inscricao);
 }
 
 void escolherArquivoPorSituacaoQuick(int situacao, char* nomeArquivo){
