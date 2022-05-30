@@ -11,13 +11,13 @@
 #define FF_TAMFITAINT 10
 #define FF_POSFITAEXT 10
 
-void FF_geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], FILE *prova, int *vetTam);
+void intercalacao2F(int quantidade, int situacao, int opcional);
+
+void FF_geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], FILE *prova, int *vetTam, int quantidade);
 int FF_intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int fitaEntradaAtual);
 void FF_preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int *vetTam);
 void FF_imprimeFitaSaida(FILE *arqvs[TOTALFITA]);
 void FF_redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA]);
-int FF_teste();
-
 int getFirstCurrentIndex(int currentFita);
 int getFirstOppositeIndex(int currentFita);
 int getLastCurrentIndex(int currentFita);

@@ -29,6 +29,9 @@ int main(int argc, char const *argv[]) {
 
     // Implementar menu de acesso às pesquisas
     switch (metodo) {
+        case 1:
+            intercalacao2F(quantidade, situacao, opcional);
+            break;
         case 2:
             intercalacaoF1(quantidade, situacao, opcional);
             break;
