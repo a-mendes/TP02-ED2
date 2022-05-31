@@ -19,6 +19,10 @@ int intercalacaoF1(int quantidade, int situacao, int opcional) {
     int vetTam = 0;                           // Estrutura que guarda os alunos em memória
 
     prova = escolherArquivoPorSituacao(situacao);
+    if (opcional) {
+        printf("Arquivo a ser ordenado: \n");
+        imprimirFitaOrigem(prova, quantidade);
+    }
 
     nomeiaArquivo(nomes);
     criaArquivo(arqvs, nomes);
@@ -221,3 +225,19 @@ void exibirResultados(int opcional, FILE *arqvs[TOTALFITA]) {
 	printf("\n __________________________________");
 }
 
+void imprimirFitaOrigem(FILE *arq, int tam) {
+    Alunos teste;
+    int cont = 1;
+    rewind(arq);
+    while (fread(&teste, sizeof(Alunos), 1, arq) && tam--) {
+        if (teste.nota != -1) {
+            printf("%d - ", cont++);
+            printf("%ld ", teste.inscricao);
+            printf("%.2f ", teste.nota);
+            printf("%s ", teste.estado);
+            printf("%s ", teste.cidade);
+            printf("%s \n", teste.curso);
+        }
+    }
+    rewind(arq);
+}

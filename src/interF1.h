@@ -21,5 +21,6 @@ void redistribuicao(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA], in
 void preencheVetorAlunos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], int *vetTam);
 void imprimeFitaSaida(FILE *arqvs[TOTALFITA]);
 void exibirResultados(int opcional, FILE *arqvs[TOTALFITA]);
+void imprimirFitaOrigem(FILE *arq, int tam);
 
 #endif
