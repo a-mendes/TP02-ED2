@@ -137,7 +137,8 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 	fseek(*arqLi, (li - 1) * sizeof(Alunos), SEEK_SET);
 	fseek(*arqEi, (li - 1) * sizeof(Alunos), SEEK_SET);
 	
-	*i = esq - 1; *j = dir + 1;
+	*i = esq - 1; 
+	*j = dir + 1;
 	
 	/**
 	 * A partição é feita até que Li e Ls se cruzem
@@ -170,12 +171,14 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 		else
 			leInf(arqLi, &ultimoLido, &li, &ondeLer);
 		
+		numComparacoesQuick++;
 		if(ultimoLido.nota > Lsup){
 			*j = es;
 			escreveMax(arqLEs, ultimoLido, &es);
 			continue;
 		}
 
+		numComparacoesQuick++;
 		if(ultimoLido.nota < Linf){
 			*i = ei;
 			escreveMin(arqEi, ultimoLido, &ei);
@@ -209,14 +212,26 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
 	fseek(*arqLEs, (*ls - 1) * sizeof(Alunos), SEEK_SET);
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
+
+	//printf("\nLs: %d", *ls);
+
 	(*ls)--; 
+
 	*ondeLer = false;
+
+	numLeituraQuick++;
 }
 
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLi);
+
+
+	//printf("\nLi: %d", *li);
 	(*li)++; 
+
 	*ondeLer = true;
+
+	numLeituraQuick++;
 }
 
 void inserirArea(TipoArea *area, Alunos *ultimoLido, int *NRArea){
@@ -228,11 +243,15 @@ void escreveMax(FILE **arqLEs, Alunos R, int *es){
 	fseek(*arqLEs, (*es - 1) * sizeof(Alunos), SEEK_SET);
 	fwrite(&R, sizeof(Alunos), 1, *arqLEs);
 	(*es)--;
+
+	numEscritaQuick++;
 }
 
 void escreveMin(FILE **arqEi, Alunos R, int *ei){
 	fwrite(&R, sizeof(Alunos), 1, *arqEi);
 	(*ei)++;
+
+	numEscritaQuick++;
 }
 
 void insereItem(Alunos *ultimoLido, TipoArea *area){
@@ -243,7 +262,7 @@ void insereItem(Alunos *ultimoLido, TipoArea *area){
 	
 	/**
 	 * Copia as informações do ultimo lido para a primeira celula desocupada da área
-	 */  
+	 */
 	copiarAluno(area[i], *ultimoLido);
 
 	ordenaArea(area);
@@ -289,7 +308,6 @@ void retiraPrimeiro(TipoArea *area, Alunos *R){
 	/**
 	 * Reordenando
 	 */ 
-
 	ordenaArea(area);
 }
 
@@ -337,15 +355,18 @@ void ordenaArea(TipoArea *area){
 			int j = i;
 			
 			while(area[j-h]->nota > aux->nota){
-				area[j]->nota = area[j-h]->nota;
+				numComparacoesQuick++;
+				area[j] = area[j-h];
 				j = j - h;
 				
 				if(j < h)
 					break;
 			}
-			area[j]->nota = aux->nota;
+			area[j] = aux;
 		}
 	} while (h != 1);
+
+	//exibeArea(area);
 }
 
 int obterNumCelulasOcupadas(TipoArea *area){
@@ -392,8 +413,8 @@ void exibirResultadosQuick(int opcional, char *nomeArquivo, int quantidade){
 			Alunos atual;
 			fread(&atual, sizeof(Alunos), 1, arq);
 
-			printf("\n%d) %ld \t%.2f \t%s \t%s \t%s", 
-				i, atual.inscricao, atual.nota, atual.estado, atual.cidade, atual.curso);
+			printf("\n%d) %ld \t%.2f \t%s \t%s \t\t\t%s", 
+				i+1, atual.inscricao, atual.nota, atual.estado, atual.cidade, atual.curso);
 		}
 
 		fclose(arq);
