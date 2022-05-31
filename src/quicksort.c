@@ -34,8 +34,7 @@ int obterNumCelulasOcupadas(TipoArea *area);
 void ordenaArea(TipoArea *area);
 void exibeArea(TipoArea *area);
 
-void imprimirFitaqs(FILE *arq, int tam);
-
+void imprimirArquivoInicial(FILE *arq, int tam);
 
 void copiarAluno(Alunos *destino, Alunos origem);
 
@@ -75,7 +74,7 @@ void quicksort(int quantidade, int situacao, int opcional){
 	//Chamada da função para imprimir arquivos iniciais
 	if (opcional) {
         printf("Arquivo a ser ordenado: \n");
-        imprimirFitaqs(arqLi, quantidade);
+        imprimirArquivoInicial(arqLi, quantidade);
     }
 	/**
 	 * Chamada para ordenação
@@ -95,7 +94,7 @@ void quicksort(int quantidade, int situacao, int opcional){
 }
 
 //Função para imprimir os arquivos iniciais
-void imprimirFitaqs(FILE *arq, int tam) {
+void imprimirArquivoInicial(FILE *arq, int tam) {
     Alunos teste;
     int cont = 1;
     rewind(arq);
