@@ -34,6 +34,8 @@ int obterNumCelulasOcupadas(TipoArea *area);
 void ordenaArea(TipoArea *area);
 void exibeArea(TipoArea *area);
 
+void imprimirFitaqs(FILE *arq, int tam);
+
 
 void copiarAluno(Alunos *destino, Alunos origem);
 
@@ -69,8 +71,12 @@ void quicksort(int quantidade, int situacao, int opcional){
 	if(arqLi == NULL || arqEi == NULL || arqLEs == NULL){
 		printf("\nERRO: Falha ao abrir arquivo \"%s\"\n", nomeArquivo);
 		return;
-	}		
-
+	}
+	//Chamada da função para imprimir arquivos iniciais
+	if (opcional) {
+        printf("Arquivo a ser ordenado: \n");
+        imprimirFitaqs(arqLi, quantidade);
+    }
 	/**
 	 * Chamada para ordenação
 	 */  
@@ -86,6 +92,24 @@ void quicksort(int quantidade, int situacao, int opcional){
 	 * Exibição de resultados de desempenho
 	 */ 
 	exibirResultadosQuick(opcional, nomeArquivo, quantidade);
+}
+
+//Função para imprimir os arquivos iniciais
+void imprimirFitaqs(FILE *arq, int tam) {
+    Alunos teste;
+    int cont = 1;
+    rewind(arq);
+    while (fread(&teste, sizeof(Alunos), 1, arq) && tam--) {
+        if (teste.nota != -1) {
+            printf("%d - ", cont++);
+            printf("%ld ", teste.inscricao);
+            printf("%.2f ", teste.nota);
+            printf("%s ", teste.estado);
+            printf("%s ", teste.cidade);
+            printf("%s \n", teste.curso);
+        }
+    }
+    rewind(arq);
 }
 
 void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir){
