@@ -259,7 +259,7 @@ void FF_exibirResultados(int quantidade, int opcional, FILE *arqvs[TOTALFITA], i
 
 void imprimirFita(FILE *arq, int tam) {
     Alunos teste;
-    int cont = 0;
+    int cont = 1;
     rewind(arq);
     while (fread(&teste, sizeof(Alunos), 1, arq) && tam--) {
         if (teste.nota != -1) {
@@ -276,7 +276,7 @@ void imprimirFita(FILE *arq, int tam) {
 
 void imprimirFitas(FILE *arqvs[TOTALFITA]) {
     Alunos teste;
-    int cont = 0;
+    int cont = 1;
     for (int i = 0; i < 19; i++) {
         rewind(arqvs[i]);
         printf("FITA %d \n", i + 1);
