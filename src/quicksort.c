@@ -213,8 +213,6 @@ void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
 	fseek(*arqLEs, (*ls - 1) * sizeof(Alunos), SEEK_SET);
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLEs);
 
-	//printf("\nLs: %d", *ls);
-
 	(*ls)--; 
 
 	*ondeLer = false;
@@ -225,8 +223,6 @@ void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer){
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer){
 	fread(ultimoLido, sizeof(Alunos), 1, *arqLi);
 
-
-	//printf("\nLi: %d", *li);
 	(*li)++; 
 
 	*ondeLer = true;
@@ -345,7 +341,7 @@ void ordenaArea(TipoArea *area){
 
 	int n = TAM_MEMORIA_INTERNA;
 	int h;
-	for(h = 1; h < n; h = 3 * h + 1);//h inicial
+	for(h = 1; h < n; h = 3 * h + 1);
 	
 	do {
 		h = (h - 1) / 3;
@@ -365,8 +361,6 @@ void ordenaArea(TipoArea *area){
 			area[j] = aux;
 		}
 	} while (h != 1);
-
-	//exibeArea(area);
 }
 
 int obterNumCelulasOcupadas(TipoArea *area){
