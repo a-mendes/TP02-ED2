@@ -6,6 +6,7 @@
 
 int numComp = 0;
 
+// Faz as comparações e substituições de posições necessárias para gerar o heap
 void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
     int i = esq;
     int j = i * 2 + 1;
@@ -37,6 +38,7 @@ void HEAP_REFAZ(Estrutura *v, int esq, int dir) {
     v[i] = aux;
 }
 
+// Constroi a heap a partir de um vetor v[TAMFITAINT], e retorna o valor de comparações feitas em HEAP_REFAZ.
 int HEAP_CONSTROI(Estrutura *v, int tam) {
     numComp = 0;
     int esq = (tam / 2) - 1;
@@ -47,23 +49,7 @@ int HEAP_CONSTROI(Estrutura *v, int tam) {
     return numComp;
 }
 
-void Insere_No(Estrutura *v, Alunos elem, int *tam) {
-    if (*tam > 19) {
-        printf("\nUltrapassou tamanho limite\n");
-        return;
-    }
-    if (*tam == 0) {
-        v[*tam].aluno = elem;
-        v[*tam].maior = false;
-        *tam += 1;
-    } else {
-        v[*tam].aluno = elem;
-        v[*tam].maior = false;
-        *tam += 1;
-        HEAP_CONSTROI(v, *tam);
-    }
-}
-
+// Função que remove o primeiro elemento do vetor, e verifica o valor de .maior em cada posição
 bool remove_No(Estrutura *v, int *tam, Analise *comp) {
     if (*tam == 0) {
         return false;
@@ -71,7 +57,7 @@ bool remove_No(Estrutura *v, int *tam, Analise *comp) {
         v[0] = v[*tam - 1];
         *tam -= 1;
     }
-
+    // Verifica se todos elemntos foram atribuidos como maior igual a true.
     bool normal = true;
     for (int i = 0; i < *tam; i++) {
         if (v[i].maior == false) {
@@ -79,7 +65,7 @@ bool remove_No(Estrutura *v, int *tam, Analise *comp) {
             break;
         }
     }
-
+    // Se todos elementos foram atribuidos como maior igual a true, então é necessário mudar de fita/bloco.
     if (normal) {
         for (int i = 0; i < *tam; i++) {
             if (v[i].aluno.nota != -1) {
@@ -93,6 +79,8 @@ bool remove_No(Estrutura *v, int *tam, Analise *comp) {
     return normal;
 }
 
+// Função que substitui o primeiro elemento do vetor, e respeitando as regras da seleção por substituição, atribui um valor
+// false ou true, para caso o valor (nota) do elemento a ser substituido seja maior que o elemento que o substituirá. 
 bool substitui(Estrutura *v, int *tam, Alunos elem, Analise *comp) {
     if (*tam == 0) {
         return false;
@@ -105,7 +93,7 @@ bool substitui(Estrutura *v, int *tam, Alunos elem, Analise *comp) {
             v[0].maior = false;
         }
     }
-
+    // Verifica se todos elemntos foram atribuidos como maior igual a true.
     bool normal = true;
     for (int i = 0; i < *tam; i++) {
         if (v[i].maior == false) {
@@ -113,7 +101,7 @@ bool substitui(Estrutura *v, int *tam, Alunos elem, Analise *comp) {
             break;
         }
     }
-
+    // Se todos elementos foram atribuidos como maior igual a true, então é necessário mudar de fita/bloco.
     if (normal) {
         for (int i = 0; i < *tam; i++) {
             if ((int)v[i].aluno.nota != -1) {
@@ -121,72 +109,8 @@ bool substitui(Estrutura *v, int *tam, Alunos elem, Analise *comp) {
             }
         }
     }
-
+    
     comp->numComparacoes += HEAP_CONSTROI(v, *tam);
 
     return normal;
 }
-
-// int main() {
-//     int tam = 0;
-//     Estrutura vet[20];
-
-//     Alunos alun;
-//     Alunos alun1;
-//     Alunos alun2;
-
-//     alun.nota = 6;
-//     alun1.nota = 7;
-//     alun2.nota = 3;
-
-//     vet[0].aluno.nota = 3;
-//     vet[0].maior = false;
-//     vet[1].aluno.nota = 4;
-//     vet[1].maior = false;
-//     vet[2].aluno.nota = 0;
-//     vet[2].maior = false;
-//     vet[3].aluno.nota = 6;
-//     vet[3].maior = false;
-//     vet[4].aluno.nota = 5;
-//     vet[4].maior = false;
-//     vet[5].aluno.nota = 9;
-//     vet[5].maior = false;
-//     vet[6].aluno.nota = 3;
-//     vet[6].maior = false;
-//     tam = 7;
-
-//     for (int i = 0; i < 7; i++) {
-//         printf("%.0f ", vet[i].aluno.nota);
-//     }
-//     printf("\n\n");
-
-//     HEAP_CONSTROI(vet, tam);
-
-//     printf("\n\n");
-
-//     Insere_No(vet, alun, &tam);
-//     Insere_No(vet, alun1, &tam);
-//     Insere_No(vet, alun2, &tam);
-
-//     printf("\n %d \n", tam);
-
-//     for (int i = 0; i < tam; i++) {
-//         printf("%.0f ", vet[i].aluno.nota);
-//     }
-//     printf("\nAQUI\n");
-
-//     Alunos alur, alur1;
-//     alur.nota = 5;
-//     alur1.nota = 1;
-
-//     substitui(vet, &tam, alur);  // 5
-//     substitui(vet, &tam, alur1);
-
-//     for (int i = 0; i < tam; i++) {
-//         printf("%.0f ", vet[i].aluno.nota);
-//     }
-
-//     printf("\nNaoNulo %d\n", tam);
-
-//     return 0;
-// }
