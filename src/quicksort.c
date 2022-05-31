@@ -13,7 +13,7 @@ clock_t tempoExecucaoFimQuick;
  * Funções usadas localmente
  */
 void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int dir);
-void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq, int dir, int *i, int *j);
+void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq, int dir, int *i, int *j);
 
 void leSup(FILE **arqLEs, Alunos *ultimoLido, int *ls, short *ondeLer);
 void leInf(FILE **arqLi, Alunos *ultimoLido, int *li, short *ondeLer);
@@ -129,7 +129,7 @@ void quicksortExterno(FILE **arqLi, FILE **arqEi, FILE **arqLEs, int esq, int di
 	free(area);
 }
 
-void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq, int dir, int *i, int *j){
+void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea *area, int esq, int dir, int *i, int *j){
 	int ls = dir, es = dir, li = esq, ei = esq, NRArea = 0, Linf = INT_MIN, Lsup = INT_MAX;
 	short ondeLer = true; 
 	Alunos ultimoLido, R;
@@ -150,7 +150,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 			else 
 				leInf(arqLi, &ultimoLido, &li, &ondeLer);
 				
-			inserirArea(&area, &ultimoLido, &NRArea);
+			inserirArea(area, &ultimoLido, &NRArea);
 			continue;
 		}
 		
@@ -185,17 +185,17 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 			continue;
 		}
 		
-		inserirArea(&area, &ultimoLido, &NRArea);
+		inserirArea(area, &ultimoLido, &NRArea);
 		
 		if(ei - esq < dir - es){
-			retiraMin(&area, &R, &NRArea);
+			retiraMin(area, &R, &NRArea);
 			escreveMin(arqEi, R, &ei);
 			
 			Linf = R.nota;
 		}
 
 		else {
-			retiraMax(&area, &R, &NRArea);
+			retiraMax(area, &R, &NRArea);
 			escreveMax(arqLEs, R, &es);
 			
 			Lsup = R.nota;
@@ -203,7 +203,7 @@ void particao(FILE **arqLi, FILE **arqEi, FILE **arqLEs, TipoArea area, int esq,
 	}
 
 	while (ei <= es){
-		retiraMin(&area, &R, &NRArea);
+		retiraMin(area, &R, &NRArea);
 		escreveMin(arqEi, R, &ei);
 	}
 }
