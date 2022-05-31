@@ -30,8 +30,9 @@ void intercalacao2F(int quantidade, int situacao, int opcional) {
     FILE *arqvs[TOTALFITA];  // Apontador para as fitas
     criaArquivo(arqvs, nomes);
 
-    int vetTam = 0;  // Estrutura que guarda os alunos em memória
-    Estrutura alunosEmMemoria[FF_TAMFITAINT];
+    // início da fase de criação de blocos ordenados
+    int vetTam = 0;
+    Estrutura alunosEmMemoria[FF_TAMFITAINT];  // heap da memória
     for (int i = 0; i < FF_TAMFITAINT; i++) {
         alunosEmMemoria[i].aluno = readFile(prova);
         alunosEmMemoria[i].maior = false;
@@ -40,10 +41,14 @@ void intercalacao2F(int quantidade, int situacao, int opcional) {
 
     HEAP_CONSTROI(alunosEmMemoria, vetTam);
     FF_geraBlocos(arqvs, alunosEmMemoria, prova, &vetTam, quantidade);
+    // fim da fase de criação de blocos ordenados
+
+    // início da intercalação
     analise.tempoInicial = clock();
     int tamEntrada = FF_inicializarMemoriaIntercalacao(arqvs, alunosEmMemoria, 0);
     int fitaSaida = FF_intercalacao(arqvs, alunosEmMemoria, 0, FF_POSFITAEXT, tamEntrada, 1);
     analise.tempoFinal = clock();
+    // fim da intercalação
 
     FF_exibirResultados(quantidade, opcional, arqvs, fitaSaida);
 
@@ -90,7 +95,7 @@ void FF_geraBlocos(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAI
     }
 }
 /*
- * Salva na memória o primeiro valor de cada fita de entrada
+ * Preenche o heap o primeiro valor de cada fita de entrada
  * retorna a quantidade de fitas com valores reais
  */
 int FF_inicializarMemoriaIntercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int fitaEntradaInicial) {
@@ -123,43 +128,60 @@ void limparEntradas(FILE *arqvs[TOTALFITA], int startIndex, int endIndex) {
     }
 }
 
+/*
+ * função recursiva para intercalação
+ * retorna o índice da fita de saída ordenada com o resultado
+ */
 int FF_intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[FF_TAMFITAINT], int fitaEntradaAtual, int fitaSaidaAtual, int tamEntrada, int countNiveis) {
     Alunos vazio = getAlunoVazio();
 
     while (tamEntrada > 0) {
+        // guarda a fita de origem do item a ser inserido na saída
         fitaEntradaAtual = alunosEmMemoria[0].posFita;
+
+        // escreve o item na saída
         fwrite(&alunosEmMemoria[0].aluno, sizeof(Alunos), 1, arqvs[fitaSaidaAtual]);
         analise.numEscrita++;
 
         Alunos aluno;
         bool novaFita = false;
         analise.numLeitura++;
+        // caso tenha acabado a fita de entrada, remove o ultimo item do heap
         if (feof(arqvs[fitaEntradaAtual]) || !fread(&aluno, sizeof(Alunos), 1, arqvs[fitaEntradaAtual]) || aluno.nota == -1) {
             novaFita = remove_No(alunosEmMemoria, &tamEntrada, &analise);
         } else {
             alunosEmMemoria[0].posFita = fitaEntradaAtual;
+            // substitui o proximo item da fita de entrada no heap
             novaFita = substitui(alunosEmMemoria, &tamEntrada, aluno, &analise);
         }
 
+        // caso não exista mais itens na fita, ou todos os itens do heap estão marcados
         if (novaFita) {
+            // escreve o delimitador vazio na saida
             fwrite(&vazio, sizeof(Alunos), 1, arqvs[fitaSaidaAtual]);
 
+            // verifica se há mais itens na fita de entrada
             int newTamEntrada = FF_inicializarMemoriaIntercalacao(arqvs, alunosEmMemoria, fitaEntradaAtual);
             int newFitaEntrada = alunosEmMemoria[0].posFita;
             if (newTamEntrada > 0) {
+                // caso haja entradas, escreve na próxima fita de saída ou volta para primeira, subindo um nível
                 if (fitaSaidaAtual + 1 <= getLastCurrentIndex(fitaSaidaAtual)) {
                     return FF_intercalacao(arqvs, alunosEmMemoria, newFitaEntrada, fitaSaidaAtual + 1, newTamEntrada, countNiveis);
                 } else {
                     return FF_intercalacao(arqvs, alunosEmMemoria, newFitaEntrada, getFirstCurrentIndex(fitaSaidaAtual), newTamEntrada, countNiveis + 1);
                 }
             } else {
+                // caso não haja mais entradas, verifica se apenas uma fita de saída foi escrita
                 if (fitaSaidaAtual == getFirstCurrentIndex(fitaSaidaAtual) && countNiveis == 1) {
+                    // caso sim, finaliza a intercalação retornando o índice da fita de saída
                     return fitaSaidaAtual;
                 } else {
-                    // limpa os arquivos de entrada ja percorridos
+                    // limpa os arquivos de entrada
                     limparEntradas(arqvs, getFirstCurrentIndex(fitaEntradaAtual), getLastCurrentIndex(fitaEntradaAtual));
-                    // preenche o heap para a proxima intercalacao
+                    // preenche o heap para a próxima intercalação
                     newTamEntrada = FF_inicializarMemoriaIntercalacao(arqvs, alunosEmMemoria, getFirstOppositeIndex(fitaEntradaAtual));
+
+                    // faz a chamada recursiva trocando as entradas e saídas
                     return FF_intercalacao(arqvs, alunosEmMemoria, getFirstOppositeIndex(fitaEntradaAtual), getFirstCurrentIndex(fitaEntradaAtual), newTamEntrada, 1);
                 }
             }
