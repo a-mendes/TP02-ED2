@@ -4,7 +4,7 @@
 #include "../utils/heap.h"
 
 
-Analise analise; // Strutura para armazenar as informações de análise de eficiência do algoritmo.
+Analise analise; // Estrutura para armazenar as informações de análise de eficiência do algoritmo.
 
 
 int intercalacaoF1(int quantidade, int situacao, int opcional) {
@@ -124,13 +124,13 @@ int intercalacao(FILE *arqvs[TOTALFITA], Estrutura alunosEmMemoria[TAMFITAINT], 
 
         if (*vetTam == 0) {
             blocosFitaSaida++;
-            if (segundoBloco) // se houver mais de um bloco em alguma fita de entrada, então a ordenação NÂO acabou.
+            if (segundoBloco) // Se houver mais de um bloco em alguma fita de entrada, então a ordenação NÂO acabou.
                 fwrite(&alunoNulo, sizeof(Alunos), 1, arqvs[POSFITAEXT]);
                 analise.numEscrita += 1;
             preencheVetorAlunos(arqvs, alunosEmMemoria, vetTam);
         }
     }
-    // retorna se há necessidade de fazer a redistribuição dos blocos ou se a ordenação acabou.
+    // Retorna se há necessidade de fazer a redistribuição dos blocos ou se a ordenação acabou.
     return blocosFitaSaida > 1 ? 1 : 0;
 }
 
