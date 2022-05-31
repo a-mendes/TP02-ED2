@@ -1,11 +1,12 @@
 #include "arquivo.h"
 
+// Fecha todos arquivos do vetor de arquivos
 void fechaArq(FILE *arqvs[TOTALFITA]) {
     for (int i = 0; i < TOTALFITA; i++) {
         fclose(arqvs[i]);
     }
 }
-
+// Cria uma lista de nomes para cada fita enumerando-as
 void nomeiaArquivo(char nomes[TOTALFITA][TOTALFITA]) {
     char buffer[3];
     char aux[TOTALFITA] = {"./data/fita"};
@@ -17,13 +18,13 @@ void nomeiaArquivo(char nomes[TOTALFITA][TOTALFITA]) {
         aux[11] = '\0';
     }
 }
-
+// Apre todos as fitas
 void criaArquivo(FILE *arqvs[TOTALFITA], char nomes[TOTALFITA][TOTALFITA]) {
     for (int i = 0; i < 20; i++) {
         arqvs[i] = fopen(nomes[i], "wb+");
     }
 }
-
+// Faz a leitura de um único elemento(Alunos), de um arquivo passado como parâmetro
 Alunos readFile(FILE *prova) {
     Alunos aluno;
 
@@ -31,13 +32,13 @@ Alunos readFile(FILE *prova) {
 
     return aluno;
 }
-
+// Trocc dois arquivos de posição
 void trocarArquivos(FILE *arqvs[TOTALFITA], int a, int b) {
     FILE *aux = arqvs[a];
     arqvs[a] = arqvs[b];
     arqvs[b] = aux;
 }
-
+// Retorna um ponteiro para o arquivo que deve ser aberto
 FILE *escolherArquivoPorSituacao(int situacao) {
     switch (situacao) {
         case 1:

@@ -3,14 +3,10 @@
 #include "../utils/arquivo.h"
 #include "../utils/heap.h"
 
-Analise analise;
-
-/// COMENTAR E MOSTRAR AS ANALISES ///////////////////////////////////////////
-////////////////////////////////////////////////////////
-
+Analise analise; // Strutura para armazenar as informações de análise de eficiência do algoritmo.
 
 int intercalacaoF1(int quantidade, int situacao, int opcional) {
-    FILE *prova;
+    FILE *prova;                              // Arquivo de origem à ser ordenado;
     analise.numComparacoes = 0;
     analise.numEscrita = 0;
     analise.numLeitura = 0;
@@ -193,10 +189,7 @@ void exibirResultados(int opcional, FILE *arqvs[TOTALFITA]) {
         imprimeFitaSaida(arqvs);
     }
 
-    /**
-     * Tempo de execução em segundos
-     */
-
+    //Tempo de execução em segundos
 	double tempoExecucao = ((double)analise.tempoFinal - analise.tempoInicial) / CLOCKS_PER_SEC;
 
 	printf("\n___________________________________");
