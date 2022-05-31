@@ -7,6 +7,7 @@
 void lerBin();
 void tiraEspaco(Alunos *aluno);
 
+// Arquivo extra que à partir do PROVAO.TXT gera um arquivo identido porém binário.
 int main() {
     // FILE *arq = fopen("../data/PROVAO.TXT", "r");
 
@@ -14,8 +15,6 @@ int main() {
     FILE *binAl = fopen("../data/AleatorioMenor.dat", "wb");
 
     // FILE *binAl = fopen("../data/ProvaoAleatorio.dat", "wb");
-    // FILE *binAs = fopen("ProvaoAscendente.dat", "wb");
-    // FILE *binDe = fopen("ProvaoDescendente.dat", "wb");
  
     char aux1[102];
     char aux2[10];
@@ -68,6 +67,7 @@ int main() {
     return 0;
 }
 
+// Printa todo um arquivo binário.
 void lerBin() {
     FILE *bin = fopen("../data/AleatorioMenor.dat", "rb");
     Alunos teste;
@@ -85,6 +85,7 @@ void lerBin() {
     printf("\n\n");
 }
 
+// Após ler o arquivo PROVAO.TXT, é necessário tirar os espaços em branco, das strings.
 void tiraEspaco(Alunos *itemAluno) {
     itemAluno->estado[2] = '\0';
     
